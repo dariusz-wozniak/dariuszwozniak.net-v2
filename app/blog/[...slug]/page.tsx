@@ -89,10 +89,18 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
       <div className="mt-24 text-center">
         <PageTitle>
           Not found{' '}
-          <span role="img" aria-label="Dizzy Face">😵</span>
+          <span role="img" aria-label="Dizzy Face">
+            😵
+          </span>
         </PageTitle>
         <p>
-          Looking for the old content (TDD course etc.)? Go to the <u><a href={"https://dariuszwozniak.netlify.app/"} target={"_blank"}>archived blog</a></u>.
+          Looking for the old content (TDD course etc.)? Go to the{' '}
+          <u>
+            <a href={'https://dariuszwozniak.netlify.app/'} target={'_blank'}>
+              archived blog
+            </a>
+          </u>
+          .
         </p>
       </div>
     )
