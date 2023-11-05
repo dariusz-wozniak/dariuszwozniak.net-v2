@@ -88,11 +88,12 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
     return (
       <div className="mt-24 text-center">
         <PageTitle>
-          Under Construction{' '}
-          <span role="img" aria-label="roadwork sign">
-            🚧
-          </span>
+          Not found{' '}
+          <span role="img" aria-label="Dizzy Face">😵</span>
         </PageTitle>
+        <p>
+          Looking for the old content (TDD course etc.)? Go to the <u><a href={"https://dariuszwozniak.netlify.app/"} target={"_blank"}>archived blog</a></u>.
+        </p>
       </div>
     )
   }
