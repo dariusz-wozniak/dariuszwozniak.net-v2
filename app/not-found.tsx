@@ -19,7 +19,7 @@ export default function NotFound() {
           Looking for the old Polish-language blog? It has been archived and is available under{' '}
           <u>
             <a href={'https://dariuszwozniak.netlify.app/'} target={'_blank'}>
-              dariuszwozniak.netlify.app/
+              dariuszwozniak.netlify.app
             </a>
           </u>
           .{' '}
