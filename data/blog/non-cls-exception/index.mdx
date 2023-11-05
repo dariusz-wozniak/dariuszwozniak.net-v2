@@ -1,0 +1,123 @@
+---
+title: Is catch the same as catch(Exception)? Well, not exactly...
+date: '2023-11-05'
+draft: false
+tags: ['c-sharp', 'il']
+summary: 'Is catch the same as catch(Exception)? Not exactly. There is a small subtle nuance that causes catch(Exception) to be not hit.'
+bibliography: non-cls-exception/references.bib
+---
+
+Is `catch` the same as `catch(Exception)`? Not exactly. There is a small subtle nuance that causes `catch(Exception)` to be not hit. Chances that it happen are, however, close to zero very close to zero and may happen when you're using C# version lower than 2.0.
+
+According to the *CLR via C#* book [@Richter2012]:
+
+> All programming languages for the CLR must support the throwing of Exception-derived objects because the Common Language Specification (CLS) mandates this. However, the CLR actually allows an instance of any type to be thrown, and some programming languages will allow code to throw non–CLS-compliant exception objects such as a String, Int32, or DateTime. The C# compiler allows code to throw only Exception-derived objects, whereas code written in some other languages allow code to throw Exception-derived objects in addition to objects that are not derived from Exception.
+>
+> [...]
+>
+> Although the C# compiler allows developers to throw Exception-derived objects only, prior
+to C# 2.0, the C# compiler did allow developers to catch non–CLS-compliant exceptions by using code like this.
+> ```csharp
+> private void SomeMethod() {
+>   try {
+>       // Put code requiring graceful recovery and/or cleanup operations here...
+>   } catch (Exception e) {
+>       // Before C# 2.0, this block catches CLS-compliant exceptions only
+>       // Now, this block catches CLS-compliant & non–CLS-compliant exceptions
+>       throw; // Re-throws whatever got caught
+>   } catch {
+>       // In all versions of C#, this block catches CLS-compliant
+>       // & non–CLS-compliant exceptions
+>   throw; // Re-throws whatever got caught
+>   }
+> }
+> ```
+
+This is very interesting. I haven't seen any working example of that behaviour, so I tried to reproduce that. I installed Windows XP on VirtualBox and then installed .NET Framework 1.1.x, Visual Studio 2003 (wow, such a nostalgic journey! :)).
+
+Now, basing on the Microsoft documentation on the [CA2102 rule](https://learn.microsoft.com/en-us/visualstudio/code-quality/ca2102) [@Ca2102], I created a simple program that throws a non-CLS-compliant exception:
+
+The .il file:
+
+```
+.assembly ThrowNonClsCompliantException {}
+.class public auto ansi beforefieldinit ThrowsExceptions
+{
+   .method public hidebysig static void
+         ThrowNonClsException() cil managed
+   {
+      .maxstack  1
+      IL_0000:  newobj     instance void [mscorlib]System.Object::.ctor()
+      IL_0005:  throw
+   }
+}
+```
+
+The .cs file:
+
+```csharp
+using System;
+
+namespace SecurityLibrary
+{
+   class HandlesExceptions
+   {
+      void CatchAllExceptions()
+      {
+        Console.WriteLine("CLR version: " + typeof(string).Assembly.ImageRuntimeVersion);
+
+         try
+         {
+            ThrowsExceptions.ThrowNonClsException();
+         }
+         catch(Exception e)
+         {
+            Console.WriteLine("CLS compliant exception caught");
+         }
+         catch
+         {
+            Console.WriteLine("Non-CLS compliant exception caught.");
+         }
+      }
+
+      static void Main()
+      {
+         HandlesExceptions handleExceptions = new HandlesExceptions();
+         handleExceptions.CatchAllExceptions();
+      }
+   }
+}
+```
+
+Then I compiled the Intermediate Language file C# file using the C# compiler. I ran the program and got the following output:
+
+```cmd
+ilasm /dll ThrowNonClsCompliantException.il
+csc /r:ThrowNonClsCompliantException.dll CatchNonClsCompliantException.cs
+```
+
+And... the `catch(Exception)` is missed (expected behavior) on the .NET Framework 1.x:
+
+```
+CLR version: v1.1.4322
+Non-CLS compliant exception caught
+```
+
+The beloved Windows XP screenshot:
+
+![Windows XP Screenshot](/static/images/blog/ZFe.png)
+
+On Windows 11 and .NET Framework (4.x) `catch(Exception)` is hit (expected behavior as well):
+
+```
+CLR version: v4.0.30319
+CLS compliant exception caught
+```
+
+Conclusions?
+
+- `catch` is the same `catch(Exception)` unless you're using C# version lower than 2.0 and non-CLS-compliant exceptions.
+- It takes a lot of fun to go back in time and code in the Visual Studio 2003 along to feel the nostalgia of the Windows XP UX.
+
+---
+[^ref]
