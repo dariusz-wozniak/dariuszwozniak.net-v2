@@ -1,22 +1,26 @@
 /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
-  title: 'Next.js Starter Blog',
-  author: 'Tails Azimuth',
-  headerTitle: 'TailwindBlog',
-  description: 'A blog created with Next.js and Tailwind.css',
+  title: 'Dariusz Woźniak Blog',
+  author: 'Dariusz Woźniak',
+  headerTitle: 'Dariusz Woźniak Blog',
+  description: 'Blog about programming (mainly .NET)',
   language: 'en-us',
   theme: 'system', // system, dark or light
-  siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
-  siteRepo: 'https://github.com/timlrx/tailwind-nextjs-starter-blog',
+  siteUrl: 'https://dariuszwozniak.net',
+  siteRepo: 'https://github.com/dariusz-wozniak/dariuszwozniak.net-v2',
   siteLogo: '/static/images/logo.png',
   socialBanner: '/static/images/twitter-card.png',
-  mastodon: 'https://mastodon.social/@mastodonuser',
-  email: 'address@yoursite.com',
-  github: 'https://github.com',
-  twitter: 'https://twitter.com/Twitter',
-  facebook: 'https://facebook.com',
-  youtube: 'https://youtube.com',
-  linkedin: 'https://www.linkedin.com',
+  mastodon: '',
+  email: '',
+  github: 'https://github.com/dariusz-wozniak',
+  twitter: 'https://twitter.com/dwozn',
+  facebook: '',
+  youtube: '',
+  linkedin: 'https://www.linkedin.com/in/wozniakdariusz',
+  instagram: 'https://www.instagram.com/darek_wozn/',
+  goodReads: 'https://www.goodreads.com/author/show/18135947.Dariusz_Wo_niak',
+  stackOverflow: 'https://stackoverflow.com/users/297823/dariusz-wo%C5%BAniak',
+  stackExchange: 'https://stackexchange.com/users/112989/dariusz-wo%c5%baniak?tab=accounts',
   locale: 'en-US',
   analytics: {
     // If you want to use an analytics provider you have to add it to the
@@ -27,15 +31,15 @@ const siteMetadata = {
       umamiWebsiteId: process.env.NEXT_UMAMI_ID, // e.g. 123e4567-e89b-12d3-a456-426614174000
     },
     // plausibleAnalytics: {
-    //   plausibleDataDomain: '', // e.g. tailwind-nextjs-starter-blog.vercel.app
+    //   plausibleDataDomain: '', // e.g. dariuszwozniak.net
     // },
     // simpleAnalytics: {},
     // posthogAnalytics: {
     //   posthogProjectApiKey: '', // e.g. 123e4567-e89b-12d3-a456-426614174000
     // },
-    // googleAnalytics: {
-    //   googleAnalyticsId: '', // e.g. G-XXXXXXX
-    // },
+    googleAnalytics: {
+      googleAnalyticsId: '385444864', // e.g. G-XXXXXXX
+    },
   },
   newsletter: {
     // supports mailchimp, buttondown, convertkit, klaviyo, revue, emailoctopus
