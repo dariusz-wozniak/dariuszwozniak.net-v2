@@ -7,3 +7,15 @@ code {
     font-size: 1em !important;
     font-weight: 500 !important;
 }
+
+.csl-entry::before {
+    content: "– ";
+}
+
+.csl-bib-body::before {
+    content: "Bibliography:"
+}
+
+.csl-bib-body .csl-entry {
+    margin: 0;
+}
