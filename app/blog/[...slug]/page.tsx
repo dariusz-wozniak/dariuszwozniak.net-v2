@@ -1,7 +1,6 @@
 import 'css/prism.css'
 import 'katex/dist/katex.css'
 
-import PageTitle from '@/components/PageTitle'
 import { components } from '@/components/MDXComponents'
 import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import { sortPosts, coreContent, allCoreContent } from 'pliny/utils/contentlayer'
@@ -12,6 +11,7 @@ import PostLayout from '@/layouts/PostLayout'
 import PostBanner from '@/layouts/PostBanner'
 import { Metadata } from 'next'
 import siteMetadata from '@/data/siteMetadata'
+import NotFound from '../../not-found'
 
 const defaultLayout = 'PostLayout'
 const layouts = {
@@ -85,25 +85,7 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
   const sortedCoreContents = allCoreContent(sortPosts(allBlogs))
   const postIndex = sortedCoreContents.findIndex((p) => p.slug === slug)
   if (postIndex === -1) {
-    return (
-      <div className="mt-24 text-center">
-        <PageTitle>
-          Not found{' '}
-          <span role="img" aria-label="Dizzy Face">
-            😵
-          </span>
-        </PageTitle>
-        <p>
-          Looking for the old content (TDD course etc.)? Go to the{' '}
-          <u>
-            <a href={'https://dariuszwozniak.netlify.app/'} target={'_blank'}>
-              archived blog
-            </a>
-          </u>
-          .
-        </p>
-      </div>
-    )
+    return NotFound()
   }
 
   const prev = sortedCoreContents[postIndex + 1]
