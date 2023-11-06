@@ -1,0 +1,102 @@
+---
+title: 'Optimizely / Episerver: How to create asset folder programmatically?'
+date: '2023-11-06'
+draft: false
+tags: ['episerver', 'optimizely']
+summary: The blog post explains how to create an asset folder programmatically in Optimizely CMS.
+---
+
+Table of contents:
+
+<TOCInline toc={props.toc} exclude="Introduction" />
+
+## Introduction
+
+In Optimizely CMS, asset folders are used to organize media files. According to the [docs](https://docs.developers.optimizely.com/content-management-system/docs/assets-and-media):
+
+> Assets such as blocks and media files, are available from edit view in the assets pane in Optimizely Content Management System (CMS) and Optimizely Customized Commerce. Assets can also be product items in the product catalog in Optimizely Customized Commerce. A media type can be for example an image, a video, or a document in a defined file format.
+>
+> Note
+>
+> Like other content types, media types must first be defined in the content model, to use the built-in functionality for assets. If a media type is not defined on the website, file upload or drag and drop will not work.
+
+Assets might be defined for the global scope or for a specific page. For example, the following screenshot shows the global assets folder—"For All Sites"—while the specific page assets folder is shown as "For This Page".
+
+![Asset Folder](/static/images/blog/optimizely/assets.png)
+
+You can create an asset folder in the CMS UI, but you can also create it programmatically. In this blog post, I will show you how to create an asset folder programmatically.
+
+## Create an asset folder for a specific page
+
+Creation of an asset folder for a specific page is pretty straightforward. You need to get the `ContentAssetHelper` (the class does not implement any of interface) and call the `GetOrCreateAssetFolder`.
+
+For example, the following code snippet creates an asset folder for the start page:
+
+```csharp
+var startPage = ContentReference.StartPage;
+_contentAssetHelper.GetOrCreateAssetFolder(startPage);
+```
+
+## Create an asset sub-folder for all pages
+
+In order to create an asset sub-folder for all pages, you need to:
+* get children of `ContentFolder` from the Global Assets folder
+* get default instance of the `ContentFolder` type
+* save the above
+
+The following code snippet creates an asset folder for all pages in the CMS.
+
+```csharp
+public ContentReference GetOrCreateGlobalAssetFolder(string name)
+{
+    var assetsReference = SystemDefinition.Current.GlobalAssetsRoot;
+
+    var contentFolders = _contentRepository.GetChildren<ContentFolder>(assetsReference)
+                                           .ToList();
+
+    var dir = contentFolders.FirstOrDefault(x => x.Name == name);
+    if (dir != null && !ContentReference.IsNullOrEmpty(dir.ContentLink))
+    {
+        return dir.ContentLink;
+    }
+
+    var newDirectory = _contentRepository.GetDefault<ContentFolder>(assetsReference);
+    newDirectory.Name = name;
+
+    var assetFolder = _contentRepository.Save(newDirectory,
+        SaveAction.Publish, AccessLevel.NoAccess);
+
+    return assetFolder;
+}
+```
+
+## In practice
+
+When invoking the code for creating an asset folder for all pages:
+
+```csharp
+_contentAssetService.GetOrCreateGlobalAssetFolder("Video files");
+```
+...then the new folder is created under "For All Sites" (`GlobalAssetsRoot`) directory:
+
+![Asset Folder](/static/images/blog/optimizely/assets-root.png)
+
+## Loading media from the asset folder
+
+In order to traverse the asset folder, you might use the `GetChildren` method from the `ContentRepository`:
+
+```csharp
+var assetFolder = _assetService.GetOrCreateGlobalAssetFolder("your directory name");
+var media = _contentRepository.GetChildren<YourContentType>(assetFolder)
+```
+
+## Example of usage
+
+The example of usage can be found on my fork of the Foundation project at the [GitHub](https://github.com/dariusz-wozniak/OptimizelyFoundation/):
+
+* [ContentAssetService](https://github.com/dariusz-wozniak/OptimizelyFoundation/blob/main/src/Foundation/Features/Assets/ContentAssetService.cs)
+    * [Example of invocation](https://github.com/dariusz-wozniak/OptimizelyFoundation/blob/main/src/Foundation/BlogMigrations/CreateAssetFolderMigrationStep.cs)
+
+## Links
+
+* [Assets and media](https://docs.developers.optimizely.com/content-management-system/docs/assets-and-media) (CMS Dev Guide)
