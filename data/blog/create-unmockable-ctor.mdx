@@ -1,0 +1,57 @@
+---
+title: 'How to create a class that has constructor impossible to mock?'
+date: '2023-11-08'
+draft: true
+tags: ['C-Sharp', 'unit testing']
+summary: In some cases, there are classes with constructors that are impossible to mock with proxy-based mocking frameworks (such as Moq, FakeItEasy, NSubstitute, etc). In this article, I will show you how to create a class that is impossible to mock.
+---
+
+In some cases, there are classes with constructors that are impossible to mock with proxy-based mocking frameworks (such as Moq, FakeItEasy, NSubstitute, etc). In this article, I will show you how to create a class that is impossible to mock.
+
+Some constructors might be difficult or even impossible to mock because of:
+
+- We don't have access to the class, because of the access level (private, internal, etc.)
+- The constructor has a dependency that is difficult to create or mock
+- Or, it has a tree of dependencies that are difficult to create or mock
+
+Consider the following example:
+
+```csharp
+public class ClassWithDifficultCtorToMock
+{
+    private ClassWithDifficultCtorToMock(string dep1)
+    {
+        Dep1 = dep1;
+    }
+
+    public string Dep1 { get; set; }
+}
+```
+
+In the above case, we cannot easily mock the class `ClassWithDifficultCtorToMock` because it has a private constructor. What we can do is to create a class using the `FormatterServices.GetUninitializedObject`:
+
+```csharp
+FormatterServices.GetUninitializedObject(typeof(ClassWithDifficultCtorToMock))
+```
+
+That's a little hacky, but it works and is very useful in unit testing scenarios.
+
+Now, we can build our test for the difficult class:
+
+```csharp
+[Test]
+public void demonstrate_ctor_creation()
+{
+    var cls = Create();
+    cls.Dep1 = "test";
+
+    cls.Dep1.Should().Be("test");
+}
+
+private static ClassWithDifficultCtorToMock Create() =>
+    (ClassWithDifficultCtorToMock)FormatterServices.GetUninitializedObject(typeof(ClassWithDifficultCtorToMock));
+```
+
+## Links
+
+* The full example to run is available at [the blog sandbox code on GitHub](https://github.com/dariusz-wozniak/blog-sandbox/blob/main/Sandbox/Sandbox/MockCtorExample/MockCtor.cs)
