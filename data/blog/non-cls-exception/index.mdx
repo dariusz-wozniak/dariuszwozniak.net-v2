@@ -7,11 +7,11 @@ summary: 'Is catch the same as catch(Exception)? Not exactly. There is a small s
 bibliography: non-cls-exception/references.bib
 ---
 
-Is `catch` the same as `catch(Exception)`? Not exactly. There is a small subtle nuance that causes `catch(Exception)` to be not hit. Chances that it happen are, however, close to zero very close to zero.
+Is `catch` the same as `catch(Exception)`? Not exactly. There is a small subtle nuance that causes `catch(Exception)` to be not hit. Chances that it happen are, however,  very close to zero.
 
 According to the *CLR via C#* book [@Richter2012]:
 
-> All programming languages for the CLR must support the throwing of Exception-derived objects because the Common Language Specification (CLS) mandates this. However, the CLR actually allows an instance of any type to be thrown, and some programming languages will allow code to throw non–CLS-compliant exception objects such as a String, Int32, or DateTime. The C# compiler allows code to throw only Exception-derived objects, whereas code written in some other languages allow code to throw Exception-derived objects in addition to objects that are not derived from Exception.
+> All programming languages for the CLR must support the throwing of Exception-derived objects because the Common Language Specification (CLS) mandates this. However, the CLR actually allows an instance of any type to be thrown, and some programming languages will allow code to throw non–CLS-compliant exception objects such as a String, Int32, or DateTime. The C# compiler allows code to throw only Exception-derived objects, whereas code written in some other languages allows code to throw Exception-derived objects in addition to objects that are not derived from Exception.
 >
 > [...]
 >
@@ -43,8 +43,7 @@ The .il file:
 .assembly ThrowNonClsCompliantException {}
 .class public auto ansi beforefieldinit ThrowsExceptions
 {
-   .method public hidebysig static void
-         ThrowNonClsException() cil managed
+   .method public hidebysig static void ThrowNonClsException() cil managed
    {
       .maxstack  1
       IL_0000:  newobj     instance void [mscorlib]System.Object::.ctor()
@@ -98,7 +97,7 @@ csc /r:ThrowNonClsCompliantException.dll CatchNonClsCompliantException.cs
 
 And... the `catch(Exception)` is missed (expected behavior) on the .NET Framework 1.x:
 
-```
+```cmd
 CLR version: v1.1.4322
 Non-CLS compliant exception caught
 ```
@@ -109,7 +108,7 @@ The beloved Windows XP screenshot:
 
 On Windows 11 and .NET Framework (4.x) `catch(Exception)` is hit (expected behavior as well):
 
-```
+```cmd
 CLR version: v4.0.30319
 CLS compliant exception caught
 ```
@@ -123,7 +122,7 @@ using System.Runtime.CompilerServices;
 
 Then, the output is:
 
-```csharp
+```cmd
 CLR version: v4.0.30319
 Non-CLS compliant exception caught.
 ```
