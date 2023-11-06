@@ -1,0 +1,122 @@
+---
+title: 'How to write unit test for a class with dependency to ServiceLocator (with example of Optimizely)?'
+date: '2023-11-09'
+draft: true
+tags: ['EPiServer', 'Optimizely', 'unit test', 'dependency injection']
+summary: In this post I will present how to write unit test for a class with dependency to ServiceLocator, with the real world example of Optimizely.
+---
+
+Table of contents:
+
+<TOCInline toc={props.toc} exclude="Introduction" />
+
+In this post I will present how to write unit test for a class with dependency to `ServiceLocator`, with the real world example of Optimizely. Note Optimizely uses Microsoft.Extensions.DependencyInjection, but the same approach can be used for other DI containers. Also, the scenario apply for non-Optimizely projects.
+
+## The problem
+
+Let's consider an unit test of a class that contains property-injected service. In Optimizely, that would be, for example, `XhtmlPropertyModel` class:
+
+```csharp
+public class XhtmlPropertyModel : PersonalizablePropertyModel<string, PropertyXhtmlString>
+{
+    private readonly Injected<IXhtmlStringPropertyRenderer> _xhtmlStringPropertyRenderer;
+
+    [JsonConstructor]
+    internal XhtmlPropertyModel() { }
+
+    public XhtmlPropertyModel(PropertyXhtmlString propertyXhtmlString,
+        ConverterContext converterContext) : base(propertyXhtmlString, converterContext)
+    {
+        this.Value = converterContext.IsContentManagementRequest ?
+            propertyXhtmlString.XhtmlString?.ToEditString() :
+            this._xhtmlStringPropertyRenderer.Service.Render(propertyXhtmlString,
+                converterContext.ExcludePersonalizedContent);
+    }
+}
+```
+
+The above class is difficult to unit test, because:
+
+- It does not have any public constructor with dependencies injections and no logic
+- It has a property-injected service
+- The `ConverterContext` is a class that is also difficult to mock as it has many properties in the constructor
+
+The problem will appear when the above model will be used in our class that we want to test. Example of the class would be:
+
+```csharp
+public class XhtmlStringPropertyService : IXhtmlStringPropertyService
+{
+    private readonly IXhtmlStringPropertyRenderer _xhtmlStringPropertyRenderer;
+
+    public XhtmlStringPropertyService([NotNull] IXhtmlStringPropertyRenderer xhtmlStringPropertyRenderer)
+    {
+        _xhtmlStringPropertyRenderer = xhtmlStringPropertyRenderer;
+    }
+
+    public string DoSomething(ConverterContext converterContext) =>
+        new XhtmlPropertyModel(new PropertyXhtmlString("something"), converterContext)?.Value;
+}
+```
+
+We also could wrap the model in the interface, so it will be mockable, but there are some context (like Content Delivery API data conversion), where you are constrained to that model.
+
+## The solution
+
+The solution is to mock `ServiceLocator` and register it within a test via `SetServiceProvider` method. Remember that `ServiceLocator` is a static class, so it is not possible to mock it with free proxy-based test frameworks like `Moq` or `NSubstitute`.
+
+In this example, I'm using xUnit.net along with NSubstitute for mocking data, but the same approach can be used with other test frameworks.
+
+The definition of system under test (i.e. `XhtmlStringPropertyService`) is:
+
+```csharp
+private static IXhtmlStringPropertyService Sut()
+{
+    var substituteForRenderer = Substitute.For<IXhtmlStringPropertyRenderer>();
+    substituteForRenderer.Render(
+                             Arg.Is<PropertyXhtmlString>(x => x.XhtmlString.ToString() == "something"),
+                             Arg.Is<bool>(x => x == false))
+                         .Returns("something different");
+
+    var substituteForServiceLocator = Substitute.For<IServiceProvider>();
+    substituteForServiceLocator.GetService(typeof(IXhtmlStringPropertyRenderer))
+                               .Returns(substituteForRenderer);
+
+    ServiceLocator.SetServiceProvider(substituteForServiceLocator);
+
+    // Indirect assertion:
+    ServiceLocator.Current.GetRequiredService<IXhtmlStringPropertyRenderer>()
+                  .Should().Be(substituteForRenderer);
+
+    return new XhtmlStringPropertyService(substituteForRenderer);
+}
+```
+
+As we can see in the above example, we are mocking `IXhtmlStringPropertyRenderer` and `IServiceProvider` and then we are registering the mocked `IServiceProvider` in `ServiceLocator`. The last step is to create an instance of the system under test.
+
+Now, our test can look like:
+
+```csharp
+[Fact]
+public void just_a_simple_test()
+{
+    IXhtmlStringPropertyService sut = Sut();
+
+    var converterContext = (ConverterContext)FormatterServices
+        .GetUninitializedObject(typeof(ConverterContext));
+
+    var something = sut.DoSomething(converterContext);
+
+    something.Should().Be("something different");
+}
+```
+
+Note the `ConverterContext` is a class that is also difficult to mock as it has many properties in the constructor. In this case, we are using a technique [to create a class with by-passing existing constructors](create-unmockable-ctor).
+
+## Conclusion
+
+* `ServiceLocator` is a static class, so it is not possible to mock it with free proxy-based test frameworks like `Moq` or `NSubstitute`.
+* The solution is to mock `ServiceLocator` and register it within a test via `SetServiceProvider` method.
+
+## Links
+
+* Browsable and runnable code can be found on GitHub: [XhtmlStringPropertyServiceTests.cs](https://github.com/dariusz-wozniak/OptimizelyFoundation/blob/main/tests/Foundation.Tests.Unit/BlogRelatedCode/XhtmlStringPropertyServiceTests.cs)
