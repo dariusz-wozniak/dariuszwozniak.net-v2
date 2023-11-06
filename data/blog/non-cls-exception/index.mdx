@@ -97,7 +97,7 @@ csc /r:ThrowNonClsCompliantException.dll CatchNonClsCompliantException.cs
 
 And... the `catch(Exception)` is missed (expected behavior) on the .NET Framework 1.x:
 
-```
+```cmd
 CLR version: v1.1.4322
 Non-CLS compliant exception caught
 ```
@@ -108,7 +108,7 @@ The beloved Windows XP screenshot:
 
 On Windows 11 and .NET Framework (4.x) `catch(Exception)` is hit (expected behavior as well):
 
-```
+```cmd
 CLR version: v4.0.30319
 CLS compliant exception caught
 ```
@@ -122,7 +122,7 @@ using System.Runtime.CompilerServices;
 
 Then, the output is:
 
-```csharp
+```cmd
 CLR version: v4.0.30319
 Non-CLS compliant exception caught.
 ```
