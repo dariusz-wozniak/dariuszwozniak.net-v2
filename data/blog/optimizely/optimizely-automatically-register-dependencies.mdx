@@ -1,0 +1,35 @@
+---
+title: 'Optimizely / Episerver: Automatically register dependencies'
+date: '2023-11-07'
+draft: true
+tags: ['EPiServer', 'Optimizely', 'Dependency Injection']
+summary: How to automatically register dependencies in Optimizely
+---
+
+In Optimizely, dependency injection is based on the `Microsoft.Extensions.DependencyInjection` library by default.
+
+You may register dependencies:
+- explicitly
+    - can be done in either `Startup.cs` or `InitializableModule`
+    - example of code: `context.Services.AddTransient<ISomeService, IService>()`
+- implicitly
+    - by applying the `[ServiceConfiguration]` attribute
+
+If you want to automate the registration of dependencies, you can use the [Scrutor](https://github.com/khellang/Scrutor) library. The library scans assemblies and automatically registers dependencies based on the attributes applied to the classes.
+
+The code I'm using for Optimizely project lands at the end of the `ConfigureServices` method in `Startup.cs`:
+
+```csharp
+services.Scan(x => x.FromAssembliesOf(typeof(Startup))
+                    .AddClasses(filter => filter.Where(type => !typeof(Attribute).IsAssignableFrom(type)))
+                    .UsingRegistrationStrategy(RegistrationStrategy.Skip)
+                    .AsImplementedInterfaces());
+```
+
+Please note `RegistrationStrategy.Skip` makes previous registrations take precedence over the ones made by Scrutor.
+
+I've found Scrutor
+
+## Links
+
+* [Scrutor at Github](https://github.com/khellang/Scrutor)
