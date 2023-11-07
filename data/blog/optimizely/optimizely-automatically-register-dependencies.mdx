@@ -11,7 +11,7 @@ In Optimizely, dependency injection is based on the `Microsoft.Extensions.Depend
 You may register dependencies:
 - explicitly
     - can be done in either `Startup.cs` or `InitializableModule`
-    - example of code: `context.Services.AddTransient<ISomeService, IService>()`
+    - example of code: `context.Services.AddTransient<ISomeService, SomeService>()`
 - implicitly
     - by applying the `[ServiceConfiguration]` attribute
 
