@@ -3,7 +3,7 @@ const siteMetadata = {
   title: 'Dariusz Woźniak | Blog',
   author: 'Dariusz Woźniak',
   headerTitle: 'Dariusz Woźniak',
-  description: 'blogging about programming, .NET and Optimizely',
+  description: 'Blogging about programming, .NET and Optimizely',
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://dariuszwozniak.net',
