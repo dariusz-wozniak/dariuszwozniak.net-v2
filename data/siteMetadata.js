@@ -38,7 +38,7 @@ const siteMetadata = {
     //   posthogProjectApiKey: '', // e.g. 123e4567-e89b-12d3-a456-426614174000
     // },
     googleAnalytics: {
-      googleAnalyticsId: '385444864', // e.g. G-XXXXXXX
+      googleAnalyticsId: 'G-NX9LP7Y2HW', // e.g. G-XXXXXXX
     },
   },
   newsletter: {
