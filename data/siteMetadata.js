@@ -1,8 +1,8 @@
 /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
-  title: 'Dariusz Woźniak Blog',
+  title: 'Dariusz Woźniak | Blog',
   author: 'Dariusz Woźniak',
-  headerTitle: 'Dariusz Woźniak Blog',
+  headerTitle: 'Dariusz Woźniak — Blog',
   description: 'Blog about programming (mainly .NET)',
   language: 'en-us',
   theme: 'system', // system, dark or light
