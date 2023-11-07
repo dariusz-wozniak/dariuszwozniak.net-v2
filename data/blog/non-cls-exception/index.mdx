@@ -106,7 +106,7 @@ The beloved Windows XP screenshot:
 
 ![Windows XP Screenshot](/static/images/blog/ZFe.png)
 
-On Windows 11 and .NET Framework (4.x) `catch(Exception)` is hit (expected behavior as well):
+On Windows 11 and .NET Framework (4.x) `catch(Exception)` is hit (expected behavior):
 
 ```cmd
 CLR version: v4.0.30319
@@ -120,7 +120,7 @@ using System.Runtime.CompilerServices;
 [assembly:RuntimeCompatibility(WrapNonExceptionThrows = false)]
 ```
 
-Then, the output is:
+Then, the output is (expected behavior as well):
 
 ```cmd
 CLR version: v4.0.30319
