@@ -1,9 +1,9 @@
 ---
 title: 'Optimizely / Episerver: Automatically register dependencies'
 date: '2023-11-07'
-draft: true
+draft: false
 tags: ['EPiServer', 'Optimizely', 'dependency injection']
-summary: How to automatically register dependencies in Optimizely
+summary: How to automatically register dependencies in Optimizely? (also in any other project that uses Microsoft.Extensions.DependencyInjection library)
 ---
 
 In Optimizely, dependency injection is based on the `Microsoft.Extensions.DependencyInjection` library by default.
@@ -11,13 +11,13 @@ In Optimizely, dependency injection is based on the `Microsoft.Extensions.Depend
 You may register dependencies:
 - explicitly
     - can be done in either `Startup.cs` or `InitializableModule`
-    - example of code: `context.Services.AddTransient<ISomeService, IService>()`
+    - example of code: `context.Services.AddTransient<ISomeService, SomeService>()`
 - implicitly
     - by applying the `[ServiceConfiguration]` attribute
 
 If you want to automate the registration of dependencies, you can use the [Scrutor](https://github.com/khellang/Scrutor) library. The library scans assemblies and automatically registers dependencies based on the attributes applied to the classes.
 
-The code I'm using for Optimizely project lands at the end of the `ConfigureServices` method in `Startup.cs`:
+The code I'm using for the Optimizely project lands at the end of the `ConfigureServices` method in `Startup.cs`:
 
 ```csharp
 services.Scan(x => x.FromAssembliesOf(typeof(Startup))
@@ -26,10 +26,11 @@ services.Scan(x => x.FromAssembliesOf(typeof(Startup))
                     .AsImplementedInterfaces());
 ```
 
-Please note `RegistrationStrategy.Skip` makes previous registrations take precedence over the ones made by Scrutor.
+Please note that `RegistrationStrategy.Skip` makes previous registrations take precedence over the ones made by the Scrutor.
 
 Scrutor is, of course, not only limited to Optimizely. You can use it in any .NET project (which I recommend).
 
 ## Links
 
 * [Scrutor at Github](https://github.com/khellang/Scrutor)
+* [Example of usage](https://github.com/dariusz-wozniak/OptimizelyFoundation/blob/main/src/Foundation/Startup.cs)
