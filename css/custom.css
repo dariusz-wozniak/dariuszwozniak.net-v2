@@ -19,3 +19,7 @@ code {
 .csl-bib-body .csl-entry {
     margin: 0;
 }
+
+span.time-to-read {
+    white-space: nowrap;
+}
