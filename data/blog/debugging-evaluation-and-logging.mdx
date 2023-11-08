@@ -1,0 +1,35 @@
+---
+title: 'Breakpoint evaluation and logging'
+date: '2023-11-11'
+draft: true
+tags: ['C-Sharp']
+summary: When it comes to debugging, there might be a case when the load of calls to the breakpoint is significant. Or, we want to log some data while debugging. In this case, it is useful to do not suspend the execution and evaluate the breakpoint condition and log the result (In JetBrains Rider).
+---
+
+When it comes to debugging, there might be a case when the load of calls to the breakpoint is significant. Or, we want to log some data while debugging. In this case, it is useful to do not suspend the execution and evaluate the breakpoint condition and log the result (In JetBrains Rider).
+
+That kind of trick is helpful in scenarios where debugger stops multiple time and we have an interest on certain property values.
+
+It can be achieved in Rider in a following way:
+
+1. Set a breakpoint.
+2. Click on More in the breakpoint window.
+3. Set "Evaluate and log" with the code you want to output.
+4. Optionally, you may suspend execution, so the breakpoint will not be stopped while debugging. In this case, breakpoint will appear as yellow.
+5. See the output in the Debug > Debug Output window.
+
+See the screenshot below:
+
+![Breakpoint evaluation and logging](/static/images/blog/rider-breakpoint-evaluate-and-log.png)
+
+And the Debug Output for my case:
+
+```text
+DefaultBlockController: Loading HeroBlock
+DefaultBlockController: Loading ButtonBlock
+DefaultBlockController: Loading TextBlock
+DefaultBlockController: Loading HeroBlock
+DefaultBlockController: Loading ButtonBlock
+DefaultBlockController: Loading HeroBlock
+DefaultBlockController: Loading ButtonBlock
+```

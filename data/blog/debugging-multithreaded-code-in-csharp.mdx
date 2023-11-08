@@ -1,0 +1,15 @@
+---
+title: 'How to set a breakpoint in a multi-threaded code?'
+date: '2023-11-11'
+draft: true
+tags: ['C-Sharp']
+summary: Debugging multi-threaded application might be challenging. When setting a breakpoint in a multi-threaded context, it might be run multiple times making debugging process difficult. However, JetBrains Rider allows to make one simple trick to debug only a single thread for a certain breakpoint.
+---
+
+Debugging multi-threaded application might be challenging. When setting a breakpoint in a multi-threaded context, it might be run multiple times making debugging process difficult.
+
+However, JetBrains Rider allows to make one simple trick to debug only a single thread for a certain breakpoint.
+
+When debugger hits a breakpoint, you can choose a thread for a breakpoint to be suspended on (Option: "Suspend only on specific thread"). This way, you can debug only a single thread. Since threads does not (usually) have names, the current thread is a pre-selected one:
+
+![Screenshot](/static/images/blog/rider-breakpoint-suspend.png)
