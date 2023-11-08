@@ -23,3 +23,7 @@ code {
 span.time-to-read {
     white-space: nowrap;
 }
+
+img.rounded-but-slightly {
+    border-radius: 10px;
+}
