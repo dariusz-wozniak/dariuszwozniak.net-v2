@@ -31,3 +31,11 @@ img.rounded-but-slightly {
 img.main-thumbnail {
     border-radius: 5px;
 }
+
+*[aria-describedby="footnote-label"]::before {
+    content: "(";
+}
+
+*[aria-describedby="footnote-label"]::after {
+    content: ")";
+}
