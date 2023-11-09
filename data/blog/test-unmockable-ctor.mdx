@@ -1,16 +1,17 @@
 ---
-title: 'How to create a class that has constructor impossible to mock?'
+title: 'How to test a class that has constructor impossible to mock?'
 date: '2023-11-08'
 draft: true
+thumbnail: '/static/images/blog/impossible-ctor.png'
 tags: ['C-Sharp', 'unit testing']
-summary: In some cases, there are classes with constructors that are impossible to mock with proxy-based mocking frameworks (such as Moq, FakeItEasy, NSubstitute, etc). In this article, I will present how to create a class that is impossible to mock.
+summary: In some cases, there are classes with constructors that are impossible to mock with proxy-based mocking frameworks (such as Moq, FakeItEasy, NSubstitute, etc). In this article, I will present how to create a test for class that is impossible to mock.
 ---
 
-In some cases, there are classes with constructors that are impossible to mock with proxy-based mocking frameworks (such as Moq, FakeItEasy, NSubstitute, etc). In this article, I will present how to create a class that is impossible to mock.
+In some cases, there are classes with constructors that are impossible to mock with proxy-based mocking frameworks (such as Moq, FakeItEasy, NSubstitute, etc). In this article, I will present how to create a test for class that is impossible to mock.
 
 Some constructors might be difficult or even impossible to mock because of:
 
-- We don't have access to the class, because of the access level (private, internal, etc.)
+- There's limited access to the class, because of the access level (private, internal, etc.)
 - The constructor has a dependency that is difficult to create or mock
 - Or, it has a tree of dependencies that are difficult to create or mock
 
@@ -28,7 +29,9 @@ public class ClassWithDifficultCtorToMock
 }
 ```
 
-In the above case, we cannot easily mock the class `ClassWithDifficultCtorToMock` because it has a private constructor. What we can do is to create a class using the `FormatterServices.GetUninitializedObject`. This reflection technique by-passes all the logic in the constructor and creates an object with all the fields set to their default values. We can use it like this:
+In the above case, we cannot easily mock the class `ClassWithDifficultCtorToMock` because it has a private constructor.
+
+Solution? What we can do is to create a class using the `FormatterServices.GetUninitializedObject`. This reflection technique by-passes all the logic in the constructor and creates an object with all the fields set to their default values. We can use it like this:
 
 ```csharp
 FormatterServices.GetUninitializedObject(typeof(ClassWithDifficultCtorToMock))

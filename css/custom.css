@@ -27,3 +27,7 @@ span.time-to-read {
 img.rounded-but-slightly {
     border-radius: 10px;
 }
+
+img.main-thumbnail {
+    border-radius: 5px;
+}

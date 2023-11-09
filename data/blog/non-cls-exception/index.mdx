@@ -3,6 +3,7 @@ title: Is catch the same as catch(Exception)? Well, not exactly...
 date: '2023-11-05'
 draft: false
 tags: ['C-Sharp']
+thumbnail: '/static/images/blog/ZFe.png'
 summary: 'Is catch the same as catch(Exception)? Not exactly. There is a small subtle nuance that causes catch(Exception) to be not hit.'
 bibliography: non-cls-exception/references.bib
 ---
@@ -130,7 +131,7 @@ Non-CLS compliant exception caught.
 Conclusions?
 
 - `catch` is the same `catch(Exception)` unless you're using C# version lower than 2.0 and non-CLS-compliant exceptions.
-    - Or, you're using the `WrapNonExceptionThrows` flag set to false in the `RuntimeCompatibility` attribute in the same type of exception.
+- Or, you're using the `WrapNonExceptionThrows` flag set to false in the `RuntimeCompatibility` attribute in the same type of exception.
 - This post does not have any practical value. It's just a curiosity that I wanted to check. I don't think anyone uses the C# version lower than 2.0 and non-CLS-compliant exceptions.
 - It takes a lot of fun to go back in time and code in Visual Studio 2003 to feel the nostalgia of the Windows XP UX.
 

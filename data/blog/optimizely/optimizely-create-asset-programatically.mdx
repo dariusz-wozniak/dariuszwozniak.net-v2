@@ -2,23 +2,20 @@
 title: 'Optimizely / Episerver: How to create asset folder programmatically?'
 date: '2023-11-06'
 draft: false
+thumbnail: '/static/images/blog/optimizely/assets.png'
 tags: ['EPiServer', 'Optimizely']
 summary: The blog post explains how to create an asset folder programmatically in Optimizely CMS.
 ---
 
 Table of contents:
 
-<TOCInline toc={props.toc} exclude="Introduction" />
+<TOCInline toc={props.toc} exclude="Introduction"/>
 
 ## Introduction
 
 In Optimizely CMS, asset folders are used to organize media files. According to the [docs](https://docs.developers.optimizely.com/content-management-system/docs/assets-and-media):
 
-> Assets such as blocks and media files, are available from edit view in the assets pane in Optimizely Content Management System (CMS) and Optimizely Customized Commerce. Assets can also be product items in the product catalog in Optimizely Customized Commerce. A media type can be for example an image, a video, or a document in a defined file format.
->
-> Note
->
-> Like other content types, media types must first be defined in the content model, to use the built-in functionality for assets. If a media type is not defined on the website, file upload or drag and drop will not work.
+> Assets such as blocks and media files, are available from edit view in the assets pane in Optimizely Content Management System (CMS) and Optimizely Customized Commerce. Assets can also be product items in the product catalog in Optimizely Customized Commerce. A media type can be for example an image, a video, or a document in a defined file format.NoteLike other content types, media types must first be defined in the content model, to use the built-in functionality for assets. If a media type is not defined on the website, file upload or drag and drop will not work.
 
 Assets might be defined for the global scope or for a specific page. For example, the following screenshot shows the global assets folder—"For All Sites"—while the specific page assets folder is shown as "For This Page".
 
@@ -95,7 +92,7 @@ var media = _contentRepository.GetChildren<YourContentType>(assetFolder)
 The example of usage can be found on my fork of the Foundation project at the [GitHub](https://github.com/dariusz-wozniak/OptimizelyFoundation/):
 
 * [ContentAssetService](https://github.com/dariusz-wozniak/OptimizelyFoundation/blob/main/src/Foundation/Features/Assets/ContentAssetService.cs)
-    * [Example of invocation](https://github.com/dariusz-wozniak/OptimizelyFoundation/blob/main/src/Foundation/BlogMigrations/CreateAssetFolderMigrationStep.cs)
+  * [Example of invocation](https://github.com/dariusz-wozniak/OptimizelyFoundation/blob/main/src/Foundation/BlogMigrations/CreateAssetFolderMigrationStep.cs)
 
 ## Links
 
