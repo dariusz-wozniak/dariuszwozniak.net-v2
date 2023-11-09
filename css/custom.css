@@ -28,6 +28,10 @@ img.rounded-but-slightly {
     border-radius: 10px;
 }
 
+img.rounded-but-less-slightly {
+    border-radius: 5px;
+}
+
 img.main-thumbnail {
     border-radius: 5px;
 }
