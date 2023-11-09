@@ -21,6 +21,7 @@ const Header = () => {
                 height={imageSize}
                 alt="Logo"
                 className="logo"
+                quality="95"
               />
             </div>
             {typeof siteMetadata.headerTitle === 'string' ? (
