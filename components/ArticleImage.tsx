@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from 'react'
+import React from 'react'
 
 interface ArticleImageProps {
   src: string
@@ -6,7 +6,7 @@ interface ArticleImageProps {
   className?: string
 }
 
-const ArticleImage: FC<ArticleImageProps> = (props): ReactElement | null => {
+const ArticleImage = (props: ArticleImageProps) => {
   let className = props.className
 
   if (!props.className) {
