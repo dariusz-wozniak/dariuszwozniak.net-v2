@@ -20,7 +20,7 @@ const ArticleImage: React.FC<ArticleImageProps> = ({ src, alt, className }) => {
   // return figure with figcaption:
   return (
     <figure className={'article-fig'}>
-      <img src={src} alt={alt} className={className + 'article-fig'} />
+      <img src={src} alt={alt} className={className + ' article-fig'} />
       <figcaption className={'article-fig'}>Image: {alt}</figcaption>
     </figure>
   )
