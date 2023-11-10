@@ -151,6 +151,9 @@ devDependencies:
   jest:
     specifier: ^29.7.0
     version: 29.7.0
+  jest-cli:
+    specifier: ^29.7.0
+    version: 29.7.0
   jest-environment-jsdom:
     specifier: ^29.7.0
     version: 29.7.0
