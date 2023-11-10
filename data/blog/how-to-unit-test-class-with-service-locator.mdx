@@ -1,10 +1,10 @@
 ---
 title: 'How to write unit test for a class with dependency to ServiceLocator (with example of Optimizely)?'
-date: '2023-11-09'
-draft: true
+date: '2023-11-10'
+draft: false
 thumbnail: '/static/images/blog/unit-test-service-locator.png'
 tags: ['EPiServer', 'Optimizely', 'unit test', 'dependency injection']
-summary: In this post I will present how to write unit test for a class with dependency to ServiceLocator, with the real world example of Optimizely.
+summary: Some testing classes may have a dependency to the ServiceLocator, so the dependencies are injected via property, for example. That makes class more difficult to unit test. In this post I will present how to write unit test for a class with dependency to ServiceLocator, with the real world example of Optimizely.
 ---
 
 Table of contents:
@@ -36,7 +36,7 @@ public class XhtmlPropertyModel : PersonalizablePropertyModel<string, PropertyXh
 }
 ```
 
-The above class is difficult to unit test, because:
+The above class is difficult to unit test, because of the following reasons:
 
 - It does not have any public constructor with dependencies injections and no logic
 - It has a property-injected service
@@ -115,7 +115,7 @@ Note the `ConverterContext` is a class that is also difficult to mock as it has 
 
 ## Conclusion
 
-* `ServiceLocator` is a static class, so it is not possible to mock it with free proxy-based test frameworks like `Moq` or `NSubstitute`.
+* `ServiceLocator` is a static class, so it is not possible to mock it with free proxy-based test frameworks like `Moq`, `FakeItEasy`, or `NSubstitute`.
 * The solution is to mock `ServiceLocator` and register it within a test via `SetServiceProvider` method.
 
 ## Links
