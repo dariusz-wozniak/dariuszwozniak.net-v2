@@ -11,7 +11,9 @@ Table of contents:
 
 <TOCInline toc={props.toc} exclude="Introduction" />
 
-In this post I will present how to write unit test for a class with dependency to `ServiceLocator`, with the real world example of Optimizely. Note Optimizely uses Microsoft.Extensions.DependencyInjection, but the same approach can be used for other DI containers. Also, the scenario apply for non-Optimizely projects.
+Some testing classes may have a dependency to the ServiceLocator, so the dependencies are injected via property, for example. That makes class more difficult to unit test. In this post I will present how to write unit test for a class with dependency to ServiceLocator, with the real world example of Optimizely.
+
+Note Optimizely uses Microsoft.Extensions.DependencyInjection, but the same approach can be used for other DI containers. Also, the scenario apply for non-Optimizely projects.
 
 ## The problem
 
