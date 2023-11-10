@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FC, ReactElement } from 'react'
 
 interface ArticleImageProps {
   src: string
@@ -6,21 +6,24 @@ interface ArticleImageProps {
   className?: string
 }
 
-const ArticleImage: React.FC<ArticleImageProps> = ({ src, alt, className }) => {
-  if (!className) {
+const ArticleImage: FC<ArticleImageProps> = (props): ReactElement | null => {
+  let className = props.className
+
+  if (!props.className) {
     className = 'article-image'
   }
 
-  if (!alt) {
-    const parts = src.split('/')
+  let alt = props.alt
+
+  if (!props.alt) {
+    const parts = props.src.split('/')
     const filename = parts[parts.length - 1]
     alt = filename.split('.')[0].replace(/-/g, ' ')
   }
 
-  // return figure with figcaption:
   return (
     <figure className={'article-fig'}>
-      <img src={src} alt={alt} className={className + ' article-fig'} />
+      <img src={props.src} alt={alt} className={className + ' article-fig'} />
       <figcaption className={'article-fig'}>Image: {alt}</figcaption>
     </figure>
   )
