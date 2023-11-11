@@ -86,7 +86,7 @@ const siteMetadata = {
       // The application ID provided by Algolia
       appId: 'C68MF7P5PG',
       // Public API key: it is safe to commit it
-      apiKey: 'e03204dba4b4116019642e9298cb2742',
+      apiKey: 'a3fdb060730fbe363a78e2e6c9523665',
       indexName: 'dariuszwozniaknet',
     },
   },
