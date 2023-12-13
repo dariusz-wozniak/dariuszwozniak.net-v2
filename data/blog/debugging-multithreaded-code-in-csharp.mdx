@@ -1,16 +1,16 @@
 ---
 title: 'How to set a breakpoint in a multi-threaded code: Thread-specific breakpoints in Rider'
-date: '2023-11-11'
-draft: true
+date: '2023-12-13'
+draft: false
 thumbnail: '/static/images/blog/rider-breakpoint-suspend.png'
 tags: ['C-Sharp', 'Rider']
-summary: Debugging multi-threaded application might be challenging. When setting a breakpoint in a multi-threaded context, it might be run multiple times making debugging process difficult. However, JetBrains Rider allows to make one simple trick to debug only a single thread for a certain breakpoint.
+summary: Debugging multi-threaded applications might be challenging. Setting a breakpoint in a multi-threaded context might be run multiple times, making the debugging process difficult. However, JetBrains Rider allows you to make one simple trick to debug only a single thread for a certain breakpoint.
 ---
 
-Debugging multi-threaded application might be challenging. When setting a breakpoint in a multi-threaded context, it might be run multiple times making debugging process difficult.
+Debugging multi-threaded applications might be challenging. Setting a breakpoint in a multi-threaded context might be run multiple times, making the debugging process difficult.
 
-However, JetBrains Rider allows to make one simple trick to debug only a single thread for a certain breakpoint.
+However, JetBrains Rider allows you to make one simple trick to debug only a single thread for a certain breakpoint.
 
-When debugger hits a breakpoint, you can choose a thread for a breakpoint to be suspended on (Option: "Suspend only on specific thread"). This way, you can debug only a single thread. Since threads does not (usually) have names, the current thread is a pre-selected one:
+When the debugger hits a breakpoint, you can choose a thread for a breakpoint to be suspended on (Option: "Suspend only on specific thread"). This way, you can debug only a single thread. Since threads do not (usually) have names, the current thread is a pre-selected one:
 
 <ArticleImage src="/static/images/blog/rider-breakpoint-suspend.png" alt="Rider breakpoint suspended on specific thread" />
