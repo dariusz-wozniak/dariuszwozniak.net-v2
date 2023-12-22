@@ -12,9 +12,9 @@ Optimizely invokes its internal validators for the cart processing. But there's 
 
 So, when the back-office user wants to view carts, and validation fails, then the cart might be mutated, and the user will see the altered cart. It's a UX design flaw that violates CQRS and should not happen, as viewing the cart should not mutate it. There should be a separate action button for validation (and, thus, potential mutation) of the cart. The example scenario is that the variant does not have a _max quantity_ setting, and the user added it to the cart. Entering the Commerce UI will remove the line item from the cart because of the validation. The message goes as follows:
 
-<ArticleImage src={"/static/images/blog/optimizely/shopping-cart.png"} alt={"Cart view"} />
-
 > The product XYZ has no valid max quantity setting and was removed from your cart.
+
+<ArticleImage src={"/static/images/blog/optimizely/shopping-cart.png"} alt={"Cart view"} />
 
 This article describes how to skip this default validation in scenarios where custom validation logic exists.
 
