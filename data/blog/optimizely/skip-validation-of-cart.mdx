@@ -1,37 +1,37 @@
 ---
 title: 'Optimizely / Episerver: How to skip automatic validation of the cart?'
-date: '2023-12-20'
+date: '2023-12-22'
 draft: false
 thumbnail: '/static/images/blog/optimizely/shopping-cart.png'
 tags: ['EPiServer', 'Optimizely']
-summary: By default, Optimizely invokes its internal validators for the cart processing. This article describes how to skip this validation in scenarios where custom validation logic is in place or we don't want UI to update the cart when viewing it.
+summary: Optimizely invokes its internal validators for the cart processing by default. This article describes how to skip this validation in scenarios where custom validation logic is in place, or we don't want UI to update the cart when viewing it.
 bibliography: _bib/skip-validation-of-cart.bib
 ---
 
-Optimizely invokes its internal validators for the cart processing. But, there's one catch. In Optimizely, cart validation may mutate the cart and its contents (line items).
+Optimizely invokes its internal validators for the cart processing. But there's one catch. In Optimizely, cart validation may mutate the cart and its contents (line items).
 
-So, when the backoffice user wants to view carts and validation fails then the cart might be mutated and the user will see the altered cart. It's an UX design flaw that violates CQRS and should not happen as viewing the cart should not mutate it. There should be a separate action button for validation (and thus, potential mutation) the cart. The example scenario is that variant does not have _max quantity_ setting and user added it to the cart. Entering the Commerce UI will remove the line item from the cart because of the validation. The message goes as the following:
+So, when the back-office user wants to view carts, and validation fails, then the cart might be mutated, and the user will see the altered cart. It's a UX design flaw that violates CQRS and should not happen, as viewing the cart should not mutate it. There should be a separate action button for validation (and, thus, potential mutation) of the cart. The example scenario is that the variant does not have a _max quantity_ setting, and the user added it to the cart. Entering the Commerce UI will remove the line item from the cart because of the validation. The message goes as follows:
 
 <ArticleImage src={"/static/images/blog/optimizely/shopping-cart.png"} alt={"Cart view"} />
 
-> The product XYZ does not have a valid max quantity setting and was removed from your cart.
+> The product XYZ has no valid max quantity setting and was removed from your cart.
 
-This article describes how to skip this default validation in scenarios where custom validation logic is in place.
+This article describes how to skip this default validation in scenarios where custom validation logic exists.
 
 ## Under the hood
 
 The class responsible for the cart validation is the `EPiServer.Commerce.Order.OrderValidationService`.
 
-It has the following validations methods:
+It has the following validation methods:
 
 * `ValidateOrRemoveLineItems`, checks if line item:
     * has not been removed
     * is active
-    * has valid market
+    * has a valid market
     * has availability for a given date
     * is published
 * `UpdatePlacedPriceOrRemoveLineItems`, checks if line item:
-    * has valid price (> 0)
+    * has a valid price (> 0)
     * has price unchanged (in comparison to the price in the catalog)
 * `UpdateInventoryOrRemoveLineItems`, checks if line item:
     * has no inventory for a given quantity
@@ -39,21 +39,21 @@ It has the following validations methods:
 * `ApplyDiscounts`:
     * does not validate anything, just applies discounts
 * `UpdateInventoryOrRemoveLineItems`:
-    * runs again after applying discounts (some line items might be added after applying promotions)
+    * runs again after applying discounts (some line items might be added after applying for promotions)
 
-These are most of the validations listed. And, as we can see, the above methods might alter the cart and its contents, i.e. remove line items from the cart.
+These are most of the validations listed. As we can see, the above methods might alter the cart and its contents, i.e., remove line items from the cart.
 
 Also, these methods might be invoked explicitly in a custom cart validation scenario. You may use the original `OrderValidationService` or extension methods in `IOrderGroupExtensions`.
 
 ## How to skip the validation?
 
-In order to skip the validation, you may just substitute dependency by registering own implementation of `IOrderValidationService` in the IoC container [@Mai2023].
+In order to skip the validation, you may just substitute dependency by registering your implementation of `IOrderValidationService` in the IoC container [@Mai2023].
 
 ```csharp
 services.AddTransient<OrderValidationService, CustomOrderValidationService>();
 ```
 
-The next step would be to override the `ValidateOrder` method and use the own logic. For some cases, you might need to skip the validation only for a specific cart. In this case, you might use `orderGroup` parameter of the above method and its cart name (e.g. "Wishlist") to determine if the validation should be skipped:
+The next step would be to override the `ValidateOrder` method and use custom logic. Sometimes, you might need to skip the validation for a specific cart only. In this case, you might use `orderGroup` parameter of the above method and its cart name (e.g. "Wishlist") to determine if the validation should be skipped:
 
 ```csharp
 public override IDictionary<ILineItem, IList<ValidationIssue>> ValidateOrder(IOrderGroup orderGroup)
@@ -65,7 +65,7 @@ public override IDictionary<ILineItem, IList<ValidationIssue>> ValidateOrder(IOr
 }
 ```
 
-If you want to skip the validation only for the cart processing in the Commerce UI then you might use the `HttpContext` to determine if the request is coming from the backoffice:
+If you want to skip the validation only for the cart processing in the Commerce UI, then you might use the `HttpContext` to determine if the request is coming from the back-office:
 
 ```csharp
 var referer = _httpContextAccessor.HttpContext?.Request?.Headers["Referer"].FirstOrDefault() ??
