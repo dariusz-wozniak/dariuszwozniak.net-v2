@@ -1,20 +1,20 @@
 ---
-title: 'Optimizely / Episerver: How to fix exception System.ArgumentException: Unable to load type (IPlugin type)'
+title: 'Optimizely / Episerver: How to fix System.ArgumentException: Unable to load type (IPlugin type)'
 date: '2024-01-04'
 draft: false
 thumbnail: '/static/images/blog/optimizely/argumentexception-plugin.png'
 tags: ['EPiServer', 'Optimizely']
-summary: Recently I have encountered the following error — System.ArgumentException, Unable to load type (IPlugin type). This post will show you how to fix it.
+Summary: Recently, I encountered the following error: System.ArgumentException, Unable to load type (IPlugin type). This post will show you how to fix it.
 ---
 
 # Introduction
 
-Recently, I have encountered with the following error: System.ArgumentException: Unable to load type (IPlugin type). This was happening on two actions:
+Recently, I have encountered the following error: System.ArgumentException: Unable to load type (IPlugin type). This was happening in two actions:
 
 - On saving contact via code: `CustomerContact.SaveChanges()`, or,
 - Saving contact in the Commerce UI.
 
-The difficulty was that the error was not very descriptive and it didn't occur on each save operation.
+The difficulty was that the error was not very descriptive and didn't occur on each save operation.
 
 The UI was saying:
 
@@ -46,9 +46,9 @@ System.ArgumentException: Unable to load type Foo.Bar.ContactUpdatedPlugin
 
 # Solution
 
-The error happened because the namespace of the plugin was changed and the registration of the plugin had a fixed definition of the plugin namespace.
+The error happened because the plugin's namespace was changed, and the plugin's registration had a fixed definition of the plugin namespace.
 
-So, in order to fix the error, we may update the registration of the plugin. However, the better way is to add the `typeof` to the plugin registration, in the way like:
+So, to fix the error, we may update the plugin's registration. However, the better way is to add the `typeof` to the plugin registration in the way like:
 
 ```csharp
 services.Configure<BusinessManagerOptions>(options =>
