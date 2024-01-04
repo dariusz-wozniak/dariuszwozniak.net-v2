@@ -1,0 +1,68 @@
+---
+title: 'Optimizely / Episerver: How to fix exception System.ArgumentException: Unable to load type (IPlugin type)'
+date: '2024-01-04'
+draft: false
+thumbnail: '/static/images/blog/optimizely/argumentexception-plugin.png'
+tags: ['EPiServer', 'Optimizely']
+summary: Recently I have encountered the following error — System.ArgumentException, Unable to load type (IPlugin type). This post will show you how to fix it.
+---
+
+# Introduction
+
+Recently, I have encountered with the following error: System.ArgumentException: Unable to load type (IPlugin type). This was happening on two actions:
+
+- On saving contact via code: `CustomerContact.SaveChanges()`, or,
+- Saving contact in the Commerce UI.
+
+The difficulty was that the error was not very descriptive and it didn't occur on each save operation.
+
+The UI was saying:
+
+> Unable to load type ContactUpdatedPlugin
+
+While the code has the following error:
+
+> System.ArgumentException: Unable to load type Foo.Bar.ContactUpdatedPlugin
+
+With the call stack:
+
+```text
+System.ArgumentException: Unable to load type Foo.Bar.ContactUpdatedPlugin
+   at Mediachase.BusinessFoundation.Data.AssemblyUtil.LoadObject(String type, String interfaceName)
+   at Mediachase.BusinessFoundation.Data.AssemblyUtil.LoadObject(String type, Type interfaceType)
+   at Mediachase.BusinessFoundation.Data.AssemblyUtil.LoadObject[T](String type)
+   at System.Linq.Enumerable.SelectArrayIterator`2.ToList()
+   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   at Mediachase.BusinessFoundation.Data.Business.BusinessManager.<>c__DisplayClass18_0.<FindPluginsByRequest>b__0(String name)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at Mediachase.BusinessFoundation.Data.Business.BusinessManager.FindPluginsByRequest(Request request, EventPipeLineStage eventStage)
+   at Mediachase.BusinessFoundation.Data.Business.BusinessManager.ExecutePlugins(EventPipeLineStage eventPipeLineStage)
+   at Mediachase.BusinessFoundation.Data.Business.BusinessManager.Execute(Request request)
+   at Mediachase.BusinessFoundation.Data.Business.BusinessManager.Update(EntityObject target)
+   at Mediachase.Commerce.Customers.CustomerContact.SaveChanges()
+   at Foo.Bar.CustomContact.SaveChanges()
+
+```
+
+# Solution
+
+The error happened because the namespace of the plugin was changed and the registration of the plugin had a fixed definition of the plugin namespace.
+
+So, in order to fix the error, we may update the registration of the plugin. However, the better way is to add the `typeof` to the plugin registration, in the way like:
+
+```csharp
+services.Configure<BusinessManagerOptions>(options =>
+{
+    options.Plugins.Add(new RequestPlugin
+    {
+        MetaClass = "Contact",
+        Method = "Update",
+        EventStage = EventPipeLineStage.PostMainOperation,
+        TypeName = $"{typeof(ContactUpdatedPlugin).FullName}, Foobar"
+    });
+});
+```
+
+# External links
+
+* Read more about plugins and entity objects pipeline in the [official documentation](https://docs.developers.optimizely.com/customized-commerce/docs/working-with-entity-objects).
