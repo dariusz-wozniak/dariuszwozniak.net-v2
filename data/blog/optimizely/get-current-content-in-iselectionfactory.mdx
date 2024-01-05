@@ -1,0 +1,59 @@
+---
+title: 'Optimizely / Episerver: How to get current content in ISelectionFactory?'
+date: '2024-01-05'
+draft: false
+thumbnail: '/static/images/blog/optimizely/epicurrentcontentcontext.png'
+tags: ['EPiServer', 'Optimizely']
+summary: Recently I struggled with getting data for the current content in the ISelectionFactory context. Here is the solution.
+---
+
+# Introduction
+
+Selection factories are used to populate dropdowns in the Episerver UI. It is used when either `SelectOne` or `SelectMany` attributes are used on a property.
+
+The selection factory is a class that implements `ISelectionFactory` interface. It has a following signature:
+
+```csharp
+public interface ISelectionFactory
+{
+    IEnumerable<ISelectItem> GetSelections(ExtendedMetadata metadata);
+}
+```
+
+The problem is that there is no simple way to get the current object that is being edited. The `ExtendedMetadata` object does not contain any information about the current object. The `FindOwnerContent()` returns null.
+
+# Solution
+
+The solution is to get the content ID from the HTTP request header. It is stored in the `x-epicurrentcontentcontext` header. The following code snippet shows how to get the content ID:
+
+```csharp
+public virtual IEnumerable<ISelectItem> GetSelections(ExtendedMetadata metadata)
+{
+    var currentContext = _httpContextAccessor.HttpContext?.Request.Headers["x-epicurrentcontentcontext"];
+    if (currentContext is null) return Enumerable.Empty<ISelectItem>();
+
+    var elementId = currentContext.Value.FirstOrDefault();
+    if (elementId is null) return Enumerable.Empty<ISelectItem>();
+
+    var get = _contentLoader.TryGet(new ContentReference(elementId), out ElementBlockBase? currentBlock);
+
+    // remaining logic here
+}
+```
+
+Where `_httpContextAccessor` is an instance of `IHttpContextAccessor` that is injected into the constructor.
+
+# Conclusion
+
+This is a simple solution to a problem that I struggled with for a while. The remarks are:
+
+There's only one Google hit for the `x-epicurrentcontentcontext` header. It is a [forum post](https://world.optimizely.com/forum/developer-forum/CMS/Thread-Container/2016/1/current-content-for-propertylist-item-selection-factory/) from 2016. Thus, it would be nice that such scenario would be documented.
+
+Please note the solution won't be working in the quick edit dialog. As per above forum post:
+
+> This however will not work in the quick-edit dialog, the x-epicurrentcontentcontext header will there instead contain whatever content you were on before opening the quick-edit dialog.
+
+# External links
+
+* [Optimizely Forums: Current content for PropertyList item selection factory](https://world.optimizely.com/forum/developer-forum/CMS/Thread-Container/2016/1/current-content-for-propertylist-item-selection-factory/)
+* [CMS Dev Docs: Single or multiple list options](https://docs.developers.optimizely.com/content-management-system/docs/single-or-multiple-list-options)
