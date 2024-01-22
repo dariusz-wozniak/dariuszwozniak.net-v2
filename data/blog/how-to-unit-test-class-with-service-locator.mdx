@@ -115,6 +115,12 @@ public void just_a_simple_test()
 
 Note the `ConverterContext` is a class that is also difficult to mock as it has many properties in the constructor. In this case, we are using a technique [to create a class with by-passing existing constructors](create-unmockable-ctor).
 
+Also note that if you're using ServiceLocator in tests that are running in parallel, we need to disable paralellization in the test fixture:
+
+* For xUnit.net, you can add attribute `[CollectionDefinition(nameof(SystemTestCollectionDefinition), DisableParallelization = true)]` to the test fixture.
+    * Read more at [StackOverflow: Xunit - disable parallelism in few tests of full set](https://stackoverflow.com/a/66035941/297823)
+* For NUnit, you can add attribute `[Parallelizable(ParallelScope.None)]` to the test fixture.
+
 ## Conclusion
 
 * `ServiceLocator` is a static class, so it is not possible to mock it with free proxy-based test frameworks like `Moq`, `FakeItEasy`, or `NSubstitute`.
