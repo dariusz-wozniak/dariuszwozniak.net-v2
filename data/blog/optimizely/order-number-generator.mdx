@@ -24,7 +24,7 @@ PO1007893
       └─Random number: 893
 ```
 
-The order number is stored in the Commerce database → `OrderGroup_PurchaseOrder` → `TrackingNumber` column. It is a `nvarchar(512)` type by default.
+The order number is stored in the Commerce database → `OrderGroup_PurchaseOrder` table → `TrackingNumber` column. It is a `nvarchar(512)` type by default.
 
 In case you need to write your own order number generator, you need to implement the `IOrderNumberGenerator` interface. The interface has only one method `GenerateOrderNumber` which returns a string and have an `IOrderGroup` parameter.
 
