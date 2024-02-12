@@ -1,0 +1,51 @@
+---
+title: 'Optimizely / Episerver: How to get anonymous user ID (even if the user is logged in) via AnonymousIdFeature?'
+date: '2024-02-12'
+draft: false
+tags: ['EPiServer', 'Optimizely']
+summary: Optimizely allows to obtain the ID of the anonymous user, even if the user is logged in. One of the example of the usage is merging cart when the user logs in.
+---
+
+Optimizely allows to obtain the ID of the anonymous user, even if the user is logged in. One of the example of the usage is merging cart when the user logs in.
+
+# How it works?
+
+The `AnonymousIdFeature`:
+* is the HTTP context feature
+    * is a part of the `AnonymousIdMiddleware`
+* retrieves a cookie value named `EPiServer_Commerce_AnonymousId`.
+
+It's definition is as the following:
+
+```csharp
+public interface IAnonymousIdFeature
+{
+    string AnonymousId { get; set; }
+}
+```
+
+The `AnonymousIdMiddleware` needs to be registered in the `Startup.cs` file:
+
+```csharp
+app.UseAnonymousId();
+```
+
+Then, we can retrieve ID of anonymous user by calling:
+
+```csharp
+var httpContext = _httpContextAccessor.HttpContext;
+
+string? idOfAnonymousAsString = httpContext.Features.Get<IAnonymousIdFeature>()?.AnonymousId;
+
+var canBeParsed = Guid.TryParse(idOfAnonymousAsString, out Guid idOfAnonymous);
+```
+
+# Example of usage
+
+The anonymous ID can be used when the user logs in and there's a need to merge the cart. Then, we can pass the anonymous ID to the `IOrderRepository.Load` in order to load the cart of the anonymous user and merge it with the cart of the logged in user.
+
+Please note that cart migration might be a complex operation as we need to handle migration of the cart items, addresses, payments, shipments, promotions, etc. Simple migration can be done by the Optimizely class `ProfileMigrator` which is described as follows:
+
+> Class to migrate orders/carts/wishlists when a customer logs in.
+
+The migrator uses `ClassMigrator` under the hood which is public but intended to be used by the Optimizely classes only. However, we might look into the the implementation in order to understand how the migration is done.
