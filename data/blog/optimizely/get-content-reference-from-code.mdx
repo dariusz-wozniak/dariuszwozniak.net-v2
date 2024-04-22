@@ -1,0 +1,30 @@
+---
+title: 'Optimizely / Episerver: How to get content from the code (e.g. SKU number)'
+date: '2024-04-22'
+draft: false
+thumbnail:
+tags: ['EPiServer', 'Optimizely']
+summary: This is a very simple recipe on how to get content from the entry/node code in the Optimizely. Let's dig in!
+---
+
+# How to get content from the code
+
+In Optimizely, in order to get a reference from a code (that is a string), you may use the `ReferenceConverter` class:
+
+```csharp
+string code = "SKU123";
+var reference = _referenceConverter.GetContentLink(code);
+```
+
+Note:
+
+* `ReferenceConverter` is a class with no interface.
+* Always check if Content Reference is not null (`ContentReference.IsNullOrEmpty`).
+* Results are internally cached.
+
+# Behind the scenes
+
+Basically, the ReferenceConverter runs the stored procedure that make a simple lookup in the database. Internally, it calls the `CatalogIdentityResolver.GetIds` method which might call one of the following stored procedures:
+
+* `ecf_GetCatalogEntryIdsByCodes`
+* `ecf_GetCatalogNodeIdsByCodes`
