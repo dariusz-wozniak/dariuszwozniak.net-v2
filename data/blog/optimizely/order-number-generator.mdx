@@ -14,19 +14,19 @@ The default way to generate an order number in Optimizely is done in the `Defaul
 * Order group ID.
 * Random, 3-digit number.
 
-For example:
+For example, for the order number = PO1007893:
 
 ```
-PO1007893
-│ │   │
-└─┼Fixed string: PO
-  └─Order group ID: 1007
-      └─Random number: 893
+PO 1007 893
+│  │    │
+└──┼────┼── Fixed prefix: "PO"
+   └────┼── Order group ID: "1007"
+        └── Random number: "893"
 ```
 
 The order number is stored in the Commerce database → `OrderGroup_PurchaseOrder` table → `TrackingNumber` column. It is a `nvarchar(512)` type by default.
 
-In case you need to write your own order number generator, you need to implement the `IOrderNumberGenerator` interface. The interface has only one method, `GenerateOrderNumber` which returns a string and has an `IOrderGroup` parameter.
+If you need to write your own order number generator, you need to implement the `IOrderNumberGenerator` interface. The interface has only one method, `GenerateOrderNumber` which returns a string and has an `IOrderGroup` parameter.
 
 Also, you need to register and replace the custom implementation in the IoC container. For example:
 
