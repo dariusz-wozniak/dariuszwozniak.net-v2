@@ -1,0 +1,33 @@
+---
+title: 'Optimizely / Episerver: Do not use a thread to resolve the current language'
+date: '2024-04-23'
+draft: false
+thumbnail:
+tags: ['EPiServer', 'Optimizely', 'CultureInfo']
+summary: Using thread to resolve the current language in Optimizely is not recommended. Here is why and how to fix it.
+---
+
+Using a thread to resolve the current language in Optimizely is not recommended. If you check the `Thread.CurrentThread.CurrentCulture` locally, it might yield the specific culture (e.g. en-US), but it might not work as expected in the DXP (Digital Experience Platform) environment.
+
+For the instance, the thread might be invariant and yield the "iv" code instead of the actual culture code. In that case, data you might expect might not be loaded.
+
+The invariant culture is a culture that is culture-independent. It is described as the following:
+
+* LCID: 127
+* KeyboardLayoutId: 127
+* DisplayName Invariant Language (Invariant Country)
+* NativeName: Invariant Language (Invariant Country)
+* TwoLetterISOLanguageName: iv
+* ThreeLetterISOLanguageName: ivl
+* ThreeLetterWindowsLanguageName: IVL
+
+Solution? There are many. The most obvious that comes to mind are:
+
+* Set a cookie with the language code.
+* Resolve the language from the URL.
+* Use the `ContentLanguage.PreferredCulture` property.
+    * It uses the `IContentLanguageAccessor.Language` under the hood which uses the `_cache["EPiServer:ContentLanguage"]` to store the language.
+
+# Links
+
+* [Determine languages](https://docs.developers.optimizely.com/content-management-system/docs/determining-languages) (CMS Dev Guide)
