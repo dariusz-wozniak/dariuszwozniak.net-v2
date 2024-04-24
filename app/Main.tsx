@@ -23,32 +23,12 @@ export default function Home({ posts }) {
               <li key={slug} className="py-12">
                 <article>
                   <div className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
-                    <dl>
-                      <dt className="sr-only">Published on</dt>
-                      <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-                        <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
-                      </dd>
-                      <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-                        <Link href={`/blog/${slug}`} aria-label={`Read "${title}"`}>
-                          {thumbnail && (
-                            <Image
-                              src={thumbnail}
-                              alt={title}
-                              className="main-thumbnail"
-                              width="250"
-                              height="350"
-                              placeholder="blur"
-                              blurDataURL={`image?url=${thumbnail}&w=250&q=1`}
-                              quality="95"
-                            />
-                          )}
-                        </Link>
-                      </dd>
-                    </dl>
-                    <div className="space-y-5 xl:col-span-3">
+                    <div className="flex flex-col justify-center space-y-5 xl:col-span-3">
+                      {' '}
+                      {/* Added flex and justify-center here */}
                       <div className="space-y-6">
                         <div>
-                          <h2 className="text-2xl font-bold leading-8 tracking-tight">
+                          <h2 className="mb-2 text-2xl font-bold leading-8 tracking-tight">
                             <Link
                               href={`/blog/${slug}`}
                               className="text-gray-900 dark:text-gray-100"
@@ -56,6 +36,9 @@ export default function Home({ posts }) {
                               {title}
                             </Link>
                           </h2>
+                          <div className="mb-2 text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
+                            <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
+                          </div>
                           <div className="flex flex-wrap">
                             {tags.sort().map((tag) => (
                               <Tag key={tag} text={tag} />
@@ -76,6 +59,27 @@ export default function Home({ posts }) {
                         </Link>
                       </div>
                     </div>
+                    <dl className="xl:col-start-1 xl:row-start-1 xl:self-center">
+                      {' '}
+                      {/* Added self-center here */}
+                      <dt className="sr-only">Published on</dt>
+                      <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
+                        <Link href={`/blog/${slug}`} aria-label={`Read "${title}"`}>
+                          {thumbnail && (
+                            <Image
+                              src={thumbnail}
+                              alt={title}
+                              className="main-thumbnail"
+                              width="250"
+                              height="350"
+                              placeholder="blur"
+                              blurDataURL={`image?url=${thumbnail}&w=250&q=1`}
+                              quality="95"
+                            />
+                          )}
+                        </Link>
+                      </dd>
+                    </dl>
                   </div>
                 </article>
               </li>
