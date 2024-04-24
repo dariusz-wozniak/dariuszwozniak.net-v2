@@ -128,15 +128,17 @@ export default function ListLayoutWithTags({
                 return (
                   <li key={path} className="py-5">
                     <article className="flex flex-row space-x-5">
-                      <div className="flex-none">
-                        <Image
-                          src={thumbnail}
-                          alt={title}
-                          width={150}
-                          height={150}
-                          className="thumbnail-image"
-                        />
-                      </div>
+                      {thumbnail && (
+                        <div className="flex-none">
+                          <Image
+                            src={thumbnail}
+                            alt={title}
+                            width={150}
+                            height={150}
+                            className="thumbnail-image"
+                          />
+                        </div>
+                      )}
                       <div className="flex-grow">
                         <dl>
                           <dt className="sr-only">Published on</dt>
