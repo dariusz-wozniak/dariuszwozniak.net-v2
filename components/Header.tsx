@@ -6,7 +6,7 @@ import MobileNav from './MobileNav'
 import ThemeSwitch from './ThemeSwitch'
 import SearchButton from './SearchButton'
 
-const imageSize = 150
+const imageSize = 75
 
 const Header = () => {
   return (
@@ -14,16 +14,6 @@ const Header = () => {
       <div>
         <Link href="/" aria-label={siteMetadata.headerTitle}>
           <div className="flex items-center justify-between">
-            <div className="mr-3">
-              <Image
-                src={'/static/images/logo.png'}
-                width={imageSize}
-                height={imageSize}
-                alt="Logo"
-                className="logo"
-                quality="95"
-              />
-            </div>
             {typeof siteMetadata.headerTitle === 'string' ? (
               <div className="hidden text-3xl font-semibold sm:block">
                 {siteMetadata.headerTitle}
