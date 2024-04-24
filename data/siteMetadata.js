@@ -8,7 +8,7 @@ const siteMetadata = {
   theme: 'system', // system, dark or light
   siteUrl: 'https://dariuszwozniak.net',
   siteRepo: 'https://github.com/dariusz-wozniak/dariuszwozniak.net-v2',
-  siteLogo: '/static/images/logo.png',
+  siteLogo: '',
   socialBanner: '/static/images/socialbanner.png',
   mastodon: '',
   email: '',
