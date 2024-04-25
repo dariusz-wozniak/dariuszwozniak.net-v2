@@ -9,7 +9,7 @@ const siteMetadata = {
   siteUrl: 'https://dariuszwozniak.net',
   siteRepo: 'https://github.com/dariusz-wozniak/dariuszwozniak.net-v2',
   siteLogo: '',
-  socialBanner: '',
+  socialBanner: '/static/images/socialbanner.png',
   mastodon: '',
   email: '',
   github: 'https://github.com/dariusz-wozniak',
