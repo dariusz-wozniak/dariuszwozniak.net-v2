@@ -5,6 +5,7 @@ import type { MDXComponents } from 'mdx/types'
 import Image from './Image'
 import CustomLink from './Link'
 import ArticleImage from './ArticleImage'
+import { Note, Tip, Important, Warning, Caution } from './Admonitions'
 
 export const components: MDXComponents = {
   Image,
@@ -13,4 +14,9 @@ export const components: MDXComponents = {
   pre: Pre,
   BlogNewsletterForm,
   ArticleImage,
+  Note,
+  Tip,
+  Important,
+  Warning,
+  Caution,
 }
