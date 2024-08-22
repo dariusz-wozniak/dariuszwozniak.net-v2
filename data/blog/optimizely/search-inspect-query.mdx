@@ -1,0 +1,737 @@
+---
+title: 'Optimizely Search / Episerver Find: Inspect the underlying query'
+date: '2024-08-22'
+draft: false
+tags: ['EPiServer', 'Optimizely']
+thumbnail: '/static/images/blog/thumbs/search-inspect-query.jpg'
+summary: Optimizely Search & Navigation (a.k.a. EPiServer Find) ia a powerful engine but, as being a black box, it might be difficult to diagnose its behavior when things go wrong. This article describes how to make a deep dive into the search engine and get the insights about the underlying query.
+---
+
+Optimizely Search & Navigation (a.k.a. EPiServer Find) ia a powerful engine but, as being a black box, it might be difficult to diagnose its behavior when things go wrong. This article describes how to make a deep dive into the search engine and get the insights about the underlying query.
+
+EPiServer Find relies on the Elasticsearch engine. The Find client constructs the query that is being sent to Elasticsearch server and then Episerver process the response. Exact queries that are being sent can be catch in the following ways:
+
+* WireShark: rather advanced method
+* Set-up proxy server (e.g. Fiddler) and catch all the traffic: useful to analyze all the traffic to Elasticsearch
+* Debug internals of the Find client: the most convenient way, but it requires knowledge where to catch
+
+In this article I will focus on the last method.
+
+# How to inspect the query?
+
+Basically, you might want to set a breakpoint in the EPiServer.Find.Api class in the place where the request is constructed and is being serialized to JSON. In the current version of the Find client, it is under `SearchCommand<TResult>` → `Execute` → `string str = this.CommandContext.Serializer...`. Usually, I set the non-suspending execution breakpoint in this place and log it to the console, so I can see the query in the debug output.
+
+Example of the query (using the Foundation project):
+
+```json
+{
+  "from": 0,
+  "size": 10,
+  "query": {
+    "filtered": {
+      "query": {
+        "filtered": {
+          "query": {
+            "custom_filters_score": {
+              "query": {
+                "filtered": {
+                  "query": {
+                    "query_string": {
+                      "query": "boot",
+                      "analyzer": "synonym"
+                    }
+                  },
+                  "filter": {
+                    "and": [
+                      {
+                        "term": {
+                          "Language.Name$$string": "en"
+                        }
+                      },
+                      {
+                        "or": [
+                          {
+                            "not": {
+                              "filter": {
+                                "term": {
+                                  "___types": "EPiServer.Commerce.Catalog.ContentTypes.EntryContentBase"
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "term": {
+                              "Markets.Value$$string": "US"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              "filters": [
+                {
+                  "filter": {
+                    "term": {
+                      "Boost$$number": 2
+                    }
+                  },
+                  "boost": 1.05
+                },
+                {
+                  "filter": {
+                    "term": {
+                      "Boost$$number": 3
+                    }
+                  },
+                  "boost": 1.1
+                },
+                {
+                  "filter": {
+                    "term": {
+                      "Boost$$number": 4
+                    }
+                  },
+                  "boost": 1.15
+                },
+                {
+                  "filter": {
+                    "term": {
+                      "Boost$$number": 5
+                    }
+                  },
+                  "boost": 1.2
+                }
+              ],
+              "score_mode": "total"
+            }
+          },
+          "filter": {
+            "and": [
+              {
+                "term": {
+                  "Bury$$bool": false
+                }
+              },
+              {
+                "or": [
+                  {
+                    "and": [
+                      {
+                        "not": {
+                          "filter": {
+                            "term": {
+                              "___types": "EPiServer.Core.ILocalizable"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "not": {
+                          "filter": {
+                            "term": {
+                              "___types": "EPiServer.Core.IVersionable"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "and": [
+                      {
+                        "term": {
+                          "___types": "EPiServer.Core.ILocalizable"
+                        }
+                      },
+                      {
+                        "not": {
+                          "filter": {
+                            "term": {
+                              "___types": "EPiServer.Core.IVersionable"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "term": {
+                          "Language.Name$$string.lowercase": "en"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "and": [
+                      {
+                        "not": {
+                          "filter": {
+                            "term": {
+                              "___types": "EPiServer.Core.ILocalizable"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "term": {
+                          "___types": "EPiServer.Core.IVersionable"
+                        }
+                      },
+                      {
+                        "and": [
+                          {
+                            "term": {
+                              "Status": 4
+                            }
+                          },
+                          {
+                            "range": {
+                              "StartPublishedNormalized$$date": {
+                                "from": "0001-01-01T00:00:00Z",
+                                "to": "now",
+                                "include_lower": true,
+                                "include_upper": true
+                              }
+                            }
+                          },
+                          {
+                            "or": [
+                              {
+                                "not": {
+                                  "filter": {
+                                    "exists": {
+                                      "field": "StopPublish$$date"
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "range": {
+                                  "StopPublish$$date": {
+                                    "from": "now",
+                                    "to": "9999-12-31T22:59:59.9999999Z",
+                                    "include_lower": false,
+                                    "include_upper": true
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "and": [
+                      {
+                        "or": [
+                          {
+                            "not": {
+                              "filter": {
+                                "exists": {
+                                  "field": "PublishedInLanguage.en.StopPublish$$date"
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "range": {
+                              "PublishedInLanguage.en.StopPublish$$date": {
+                                "from": "now",
+                                "to": "9999-12-31T22:59:59.9999999Z",
+                                "include_lower": false,
+                                "include_upper": true
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "range": {
+                          "PublishedInLanguage.en.StartPublish$$date": {
+                            "from": "0001-01-01T00:00:00Z",
+                            "to": "now",
+                            "include_lower": true,
+                            "include_upper": true
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "and": [
+                      {
+                        "or": [
+                          {
+                            "not": {
+                              "filter": {
+                                "exists": {
+                                  "field": "PublishedInLanguage.en.StopPublish$$date"
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "range": {
+                              "PublishedInLanguage.en.StopPublish$$date": {
+                                "from": "now",
+                                "to": "9999-12-31T22:59:59.9999999Z",
+                                "include_lower": false,
+                                "include_upper": true
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "range": {
+                          "PublishedInLanguage.en.StartPublish$$date": {
+                            "from": "0001-01-01T00:00:00Z",
+                            "to": "now",
+                            "include_lower": true,
+                            "include_upper": true
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "and": [
+                  {
+                    "or": [
+                      {
+                        "not": {
+                          "filter": {
+                            "term": {
+                              "___types": "EPiServer.Commerce.Catalog.ContentTypes.EntryContentBase"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "term": {
+                          "Markets.Value$$string": "US"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "or": [
+                      {
+                        "not": {
+                          "filter": {
+                            "term": {
+                              "___types": "EPiServer.Core.IContent"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "term": {
+                          "IsDeleted$$bool": false
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "or": [
+                      {
+                        "and": [
+                          {
+                            "not": {
+                              "filter": {
+                                "term": {
+                                  "___types": "EPiServer.Core.ILocalizable"
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "not": {
+                              "filter": {
+                                "term": {
+                                  "___types": "EPiServer.Core.IVersionable"
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "and": [
+                          {
+                            "term": {
+                              "___types": "EPiServer.Core.ILocalizable"
+                            }
+                          },
+                          {
+                            "not": {
+                              "filter": {
+                                "term": {
+                                  "___types": "EPiServer.Core.IVersionable"
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "term": {
+                              "Language.Name$$string.lowercase": "en"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "and": [
+                          {
+                            "not": {
+                              "filter": {
+                                "term": {
+                                  "___types": "EPiServer.Core.ILocalizable"
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "term": {
+                              "___types": "EPiServer.Core.IVersionable"
+                            }
+                          },
+                          {
+                            "and": [
+                              {
+                                "term": {
+                                  "Status": 4
+                                }
+                              },
+                              {
+                                "range": {
+                                  "StartPublishedNormalized$$date": {
+                                    "from": "0001-01-01T00:00:00Z",
+                                    "to": "now",
+                                    "include_lower": true,
+                                    "include_upper": true
+                                  }
+                                }
+                              },
+                              {
+                                "or": [
+                                  {
+                                    "not": {
+                                      "filter": {
+                                        "exists": {
+                                          "field": "StopPublish$$date"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "range": {
+                                      "StopPublish$$date": {
+                                        "from": "now",
+                                        "to": "9999-12-31T22:59:59.9999999Z",
+                                        "include_lower": false,
+                                        "include_upper": true
+                                      }
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "and": [
+                          {
+                            "or": [
+                              {
+                                "not": {
+                                  "filter": {
+                                    "exists": {
+                                      "field": "PublishedInLanguage.en.StopPublish$$date"
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "range": {
+                                  "PublishedInLanguage.en.StopPublish$$date": {
+                                    "from": "now",
+                                    "to": "9999-12-31T22:59:59.9999999Z",
+                                    "include_lower": false,
+                                    "include_upper": true
+                                  }
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "range": {
+                              "PublishedInLanguage.en.StartPublish$$date": {
+                                "from": "0001-01-01T00:00:00Z",
+                                "to": "now",
+                                "include_lower": true,
+                                "include_upper": true
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "and": [
+                          {
+                            "or": [
+                              {
+                                "not": {
+                                  "filter": {
+                                    "exists": {
+                                      "field": "PublishedInLanguage.en.StopPublish$$date"
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "range": {
+                                  "PublishedInLanguage.en.StopPublish$$date": {
+                                    "from": "now",
+                                    "to": "9999-12-31T22:59:59.9999999Z",
+                                    "include_lower": false,
+                                    "include_upper": true
+                                  }
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "range": {
+                              "PublishedInLanguage.en.StartPublish$$date": {
+                                "from": "0001-01-01T00:00:00Z",
+                                "to": "now",
+                                "include_lower": true,
+                                "include_upper": true
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "or": [
+                      {
+                        "not": {
+                          "filter": {
+                            "term": {
+                              "___types": "EPiServer.Security.IContentSecurable"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "term": {
+                          "UsersWithReadAccess$$string.lowercase": "admin@example.com"
+                        }
+                      },
+                      {
+                        "terms": {
+                          "RolesWithReadAccess$$string": [
+                            "Administrators",
+                            "WebAdmins",
+                            "Everyone",
+                            "Authenticated",
+                            "CommerceAdmins",
+                            "CmsAdmins",
+                            "VisitorGroupAdmins",
+                            "GoogleAnalyticsAdministrators"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "term": {
+                  "___types": "EPiServer.Core.IContent"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "filter": {
+        "term": {
+          "___types": "EPiServer.Commerce.Catalog.ContentTypes.EntryContentBase"
+        }
+      }
+    }
+  },
+  "sort": [
+    {
+      "_score": {}
+    }
+  ],
+  "fields": [
+    "___types",
+    "ContentLink.ID$$number",
+    "ContentLink.ProviderName$$string",
+    "Language.Name$$string"
+  ]
+}
+```
+
+The response from the above is as follows:
+
+```json
+{
+	"took": 4,
+	"timed_out": false,
+	"_shards": {
+		"total": 6,
+		"successful": 6,
+		"failed": 0
+	},
+	"hits": {
+		"total": 3,
+		"max_score": 0.6464435,
+		"hits": [
+			{
+				"_index": "dwozniakfls_founddddddd-en",
+				"_type": "Foundation_Features_CatalogContent_Product_GenericProduct",
+				"_id": "CatalogContent_fbe1fb54-d02e-493c-a64d-025217a34de3_en",
+				"_score": 0.6464435,
+				"_source": {
+					"ContentLink": {}
+				},
+				"fields": {
+					"___types": [
+						"Foundation.Features.CatalogContent.Product.GenericProduct_DynamicProxy",
+						"Foundation.Features.CatalogContent.Product.GenericProduct",
+						"EPiServer.Commerce.Catalog.ContentTypes.ProductContent",
+						"EPiServer.Commerce.Catalog.ContentTypes.EntryContentBase",
+						"EPiServer.Commerce.Catalog.ContentTypes.CatalogContentBase",
+						"EPiServer.Core.ContentData",
+						"System.Object",
+						"EPiServer.Core.IContentData",
+						"EPiServer.Core.IInitializableContent",
+						"EPiServer.Core.IModifiedTrackable",
+						"EPiServer.Data.Entity.IReadOnly",
+						"EPiServer.Data.Entity.IReadOnly`1[[EPiServer.Commerce.Catalog.ContentTypes.CatalogContentBase, EPiServer.Business.Commerce, Version=14.15.1.0, Culture=neutral, PublicKeyToken=8fe83dea738b45b7]]",
+						"EPiServer.Core.IContent",
+						"EPiServer.Core.ILocalizable",
+						"EPiServer.Core.ILocale",
+						"EPiServer.Core.IVersionable",
+						"EPiServer.Web.Routing.IRoutable",
+						"EPiServer.Security.ISecurable",
+						"EPiServer.Commerce.Catalog.ContentTypes.IMetaClass",
+						"EPiServer.Commerce.Catalog.ContentTypes.ISearchEngineInformation",
+						"EPiServer.Core.IChangeTrackable",
+						"EPiServer.Commerce.Catalog.ContentTypes.ICategorizable",
+						"EPiServer.Commerce.Catalog.ContentTypes.IAssociating",
+						"EPiServer.Commerce.Catalog.ContentTypes.IAssetContainer",
+						"EPiServer.Commerce.Catalog.ContentTypes.IVariantContainer",
+						"Foundation.Features.CatalogContent.IProductRecommendations",
+						"Foundation.Features.Shared.IFoundationContent"
+					],
+					"Language.Name$$string": "en",
+					"ContentLink.ProviderName$$string": "CatalogContent",
+					"ContentLink.ID$$number": 49
+				}
+			},
+			{
+				"_index": "dwozniakfls_founddddddd-en",
+				"_type": "Foundation_Features_CatalogContent_Product_GenericProduct",
+				"_id": "CatalogContent_b2fd5c96-8042-4da7-8196-177721597676_en",
+				"_score": 0.5227358,
+				"_source": {
+					"ContentLink": {}
+				},
+				"fields": {
+					"___types": [
+						"Foundation.Features.CatalogContent.Product.GenericProduct_DynamicProxy",
+						"Foundation.Features.CatalogContent.Product.GenericProduct",
+						"EPiServer.Commerce.Catalog.ContentTypes.ProductContent",
+						"EPiServer.Commerce.Catalog.ContentTypes.EntryContentBase",
+						"EPiServer.Commerce.Catalog.ContentTypes.CatalogContentBase",
+						"EPiServer.Core.ContentData",
+						"System.Object",
+						"EPiServer.Core.IContentData",
+						"EPiServer.Core.IInitializableContent",
+						"EPiServer.Core.IModifiedTrackable",
+						"EPiServer.Data.Entity.IReadOnly",
+						"EPiServer.Data.Entity.IReadOnly`1[[EPiServer.Commerce.Catalog.ContentTypes.CatalogContentBase, EPiServer.Business.Commerce, Version=14.15.1.0, Culture=neutral, PublicKeyToken=8fe83dea738b45b7]]",
+						"EPiServer.Core.IContent",
+						"EPiServer.Core.ILocalizable",
+						"EPiServer.Core.ILocale",
+						"EPiServer.Core.IVersionable",
+						"EPiServer.Web.Routing.IRoutable",
+						"EPiServer.Security.ISecurable",
+						"EPiServer.Commerce.Catalog.ContentTypes.IMetaClass",
+						"EPiServer.Commerce.Catalog.ContentTypes.ISearchEngineInformation",
+						"EPiServer.Core.IChangeTrackable",
+						"EPiServer.Commerce.Catalog.ContentTypes.ICategorizable",
+						"EPiServer.Commerce.Catalog.ContentTypes.IAssociating",
+						"EPiServer.Commerce.Catalog.ContentTypes.IAssetContainer",
+						"EPiServer.Commerce.Catalog.ContentTypes.IVariantContainer",
+						"Foundation.Features.CatalogContent.IProductRecommendations",
+						"Foundation.Features.Shared.IFoundationContent"
+					],
+					"Language.Name$$string": "en",
+					"ContentLink.ProviderName$$string": "CatalogContent",
+					"ContentLink.ID$$number": 36
+				}
+			},
+			{
+				"_index": "dwozniakfls_founddddddd-en",
+				"_type": "Foundation_Features_CatalogContent_Product_GenericProduct",
+				"_id": "CatalogContent_873cfa45-a12d-45c5-a8c0-2104bb913b0f_en",
+				"_score": 0.27660578,
+				"_source": {
+					"ContentLink": {}
+				},
+				"fields": {
+					"___types": [
+						"Foundation.Features.CatalogContent.Product.GenericProduct_DynamicProxy",
+						"Foundation.Features.CatalogContent.Product.GenericProduct",
+						"EPiServer.Commerce.Catalog.ContentTypes.ProductContent",
+						"EPiServer.Commerce.Catalog.ContentTypes.EntryContentBase",
+						"EPiServer.Commerce.Catalog.ContentTypes.CatalogContentBase",
+						"EPiServer.Core.ContentData",
+						"System.Object",
+						"EPiServer.Core.IContentData",
+						"EPiServer.Core.IInitializableContent",
+						"EPiServer.Core.IModifiedTrackable",
+						"EPiServer.Data.Entity.IReadOnly",
+						"EPiServer.Data.Entity.IReadOnly`1[[EPiServer.Commerce.Catalog.ContentTypes.CatalogContentBase, EPiServer.Business.Commerce, Version=14.15.1.0, Culture=neutral, PublicKeyToken=8fe83dea738b45b7]]",
+						"EPiServer.Core.IContent",
+						"EPiServer.Core.ILocalizable",
+						"EPiServer.Core.ILocale",
+						"EPiServer.Core.IVersionable",
+						"EPiServer.Web.Routing.IRoutable",
+						"EPiServer.Security.ISecurable",
+						"EPiServer.Commerce.Catalog.ContentTypes.IMetaClass",
+						"EPiServer.Commerce.Catalog.ContentTypes.ISearchEngineInformation",
+						"EPiServer.Core.IChangeTrackable",
+						"EPiServer.Commerce.Catalog.ContentTypes.ICategorizable",
+						"EPiServer.Commerce.Catalog.ContentTypes.IAssociating",
+						"EPiServer.Commerce.Catalog.ContentTypes.IAssetContainer",
+						"EPiServer.Commerce.Catalog.ContentTypes.IVariantContainer",
+						"Foundation.Features.CatalogContent.IProductRecommendations",
+						"Foundation.Features.Shared.IFoundationContent"
+					],
+					"Language.Name$$string": "en",
+					"ContentLink.ProviderName$$string": "CatalogContent",
+					"ContentLink.ID$$number": 38
+				}
+			}
+		]
+	}
+}
+```
+
+# Links
+
+* [Optimizely Search & Navigation developer documentation](https://docs.developers.optimizely.com/digital-experience-platform/v1.1.0-search-and-navigation/docs/getting-started)
+* [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html)
