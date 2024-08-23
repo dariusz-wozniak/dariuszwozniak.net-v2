@@ -1,4 +1,10 @@
 {
-  "optimizely": 1,
-  "csharp": 1
+  "c-sharp": 4,
+  "dependency-injection": 2,
+  "episerver": 10,
+  "locale": 1,
+  "meta": 1,
+  "optimizely": 10,
+  "rider": 2,
+  "unit-testing": 2
 }
