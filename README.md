@@ -10,3 +10,16 @@ Source code of the personal blog.
 ## v1
 * Repo: https://github.com/dariusz-wozniak/dariuszwozniak.net
 * Mirror: https://dariuszwozniak.netlify.app/
+
+## How to start?
+
+```bash
+yarn install
+yarn start
+```
+
+Run tests:
+
+```bash
+yarn test
+```
