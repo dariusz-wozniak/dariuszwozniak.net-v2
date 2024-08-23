@@ -68,7 +68,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                     <Image
                       src={content.thumbnail}
                       alt={content.title}
-                      className="rounded-lg"
+                      className="block rounded-lg mx-auto my-0"
                       width={250}
                       height={250}
                       quality={90}
