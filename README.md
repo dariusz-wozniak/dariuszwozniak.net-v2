@@ -23,3 +23,7 @@ Run tests:
 ```bash
 yarn test
 ```
+
+Debug:
+
+* Use `dev` configuration
