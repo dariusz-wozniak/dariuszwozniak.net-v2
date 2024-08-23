@@ -19,7 +19,13 @@ In this article I will focus on the last method.
 
 # How to inspect the query?
 
-Basically, you might want to set a breakpoint in the EPiServer.Find.Api class in the place where the request is constructed and is being serialized to JSON. In the current version of the Find client, it is under `SearchCommand<TResult>` → `Execute` → `string str = this.CommandContext.Serializer...`. Usually, I set the non-suspending execution breakpoint in this place and log it to the console, so I can see the query in the debug output.
+Basically, you might want to set a breakpoint in the EPiServer.Find.Api class in the place where the request is constructed and is being serialized to JSON. In the current version of the Find client, it is under:
+
+* `SearchCommand<TResult>` →
+  * `Execute` →
+    * `string str = this.CommandContext.Serializer...`
+
+Usually, I set the non-suspending execution breakpoint in this place and log it to the console, so I can see the query in the debug output.
 
 Example of the query (using the Foundation project) — Please expand to see more details:
 
@@ -837,9 +843,11 @@ Instead of:
 }
 ```
 
-And... that's all folks. Basing on the RAW query, you may manipulate it and adjust to your needs. You can also remove/update expression parts to see which part of the query is responsible for the results. I've found this method very effective as results are immediate.
+Basing on the RAW query, you may manipulate it and adjust to your needs. You can also remove/update expression parts to see which part of the query is responsible for the results. I've found this method very effective as results are immediate.
 
 The query analysis is also needed for building custom search queries (wildcard, fuzziness, proximity, boosting terms, etc.) and invoke them from a code.
+
+Please note that there are other queries running in other places than the `SearchCommand`.
 
 # Links
 
