@@ -4,7 +4,7 @@ date: '2024-08-22'
 draft: false
 tags: ['EPiServer', 'Optimizely']
 thumbnail: '/static/images/blog/thumbs/search-inspect-query.jpg'
-summary: Optimizely Search & Navigation (a.k.a. EPiServer Find) ia a powerful engine but, as being a black box, it might be difficult to diagnose its behavior when things go wrong. This article describes how to make a deep dive into the search engine and get the insights about the underlying query.
+summary: Optimizely Search & Navigation (a.k.a. EPiServer Find) is a powerful engine but, as being a black box, it might be difficult to diagnose its behavior when things go wrong. This article describes how to make a deep dive into the search engine and get the insights about the underlying query.
 ---
 
 Optimizely Search & Navigation (a.k.a. EPiServer Find) ia a powerful engine but, as being a black box, it might be difficult to diagnose its behavior when things go wrong. This article describes how to make a deep dive into the search engine and get the insights about the underlying query.
@@ -21,7 +21,7 @@ In this article I will focus on the last method.
 
 Basically, you might want to set a breakpoint in the EPiServer.Find.Api class in the place where the request is constructed and is being serialized to JSON. In the current version of the Find client, it is under `SearchCommand<TResult>` → `Execute` → `string str = this.CommandContext.Serializer...`. Usually, I set the non-suspending execution breakpoint in this place and log it to the console, so I can see the query in the debug output.
 
-Example of the query (using the Foundation project):
+Example of the query (using the Foundation project) — Please expand to see more details:
 
 <details>
 ```json
@@ -584,6 +584,20 @@ Example of the query (using the Foundation project):
 ```
 </details>
 
+Request needs to be sent to the Elasticsearch server with POST verb. The URL is constructed basing on your index, i.e.:
+
+```
+https://SERVICE.find.episerver.net/INDEXID/INDEXNAME/_search
+```
+
+For example:
+
+```
+https://demo42.find.episerver.net/XSAfcsdfvs214fsa1zxwg/myindex/_search
+```
+
+Request seems to be self-explanatory — it's just an expression used for the search. All the query details are referenced in the official docs (see links at the end of the article).
+
 The response from the above is as follows:
 
 <details>
@@ -601,7 +615,7 @@ The response from the above is as follows:
 		"max_score": 0.6464435,
 		"hits": [
 			{
-				"_index": "dwozniakfls_founddddddd-en",
+				"_index": "myindex",
 				"_type": "Foundation_Features_CatalogContent_Product_GenericProduct",
 				"_id": "CatalogContent_fbe1fb54-d02e-493c-a64d-025217a34de3_en",
 				"_score": 0.6464435,
@@ -644,7 +658,7 @@ The response from the above is as follows:
 				}
 			},
 			{
-				"_index": "dwozniakfls_founddddddd-en",
+				"_index": "myindex",
 				"_type": "Foundation_Features_CatalogContent_Product_GenericProduct",
 				"_id": "CatalogContent_b2fd5c96-8042-4da7-8196-177721597676_en",
 				"_score": 0.5227358,
@@ -687,7 +701,7 @@ The response from the above is as follows:
 				}
 			},
 			{
-				"_index": "dwozniakfls_founddddddd-en",
+				"_index": "myindex",
 				"_type": "Foundation_Features_CatalogContent_Product_GenericProduct",
 				"_id": "CatalogContent_873cfa45-a12d-45c5-a8c0-2104bb913b0f_en",
 				"_score": 0.27660578,
@@ -735,7 +749,96 @@ The response from the above is as follows:
 ```
 </details>
 
+The response seems to be less-readable for human beings. For the ease of reading, you might manipulate the request a little bit. Usually, I'm changing what's being returned (the `fields` node).
+
+Instead of:
+
+```
+  ...
+  "fields": [
+    "___types",
+    "ContentLink.ID$$number",
+    "ContentLink.ProviderName$$string",
+    "Language.Name$$string"
+  ]
+```
+
+...I'm using:
+
+```
+  ...
+  "fields": [
+    "ContentLink.ID$$number",
+    "Code$$string"
+  ]
+```
+
+...so the response is less cluttered and more human-readable:
+
+
+```json
+{
+	"took": 5,
+	"timed_out": false,
+	"_shards": {
+		"total": 6,
+		"successful": 6,
+		"failed": 0
+	},
+	"hits": {
+		"total": 3,
+		"max_score": 0.76414496,
+		"hits": [
+			{
+				"_index": "myindex",
+				"_type": "Foundation_Features_CatalogContent_Product_GenericProduct",
+				"_id": "CatalogContent_fbe1fb54-d02e-493c-a64d-025217a34de3_en",
+				"_score": 0.76414496,
+				"_source": {
+					"ContentLink": {}
+				},
+				"fields": {
+					"ContentLink.ID$$number": 49,
+					"Code$$string": "P-39813617"
+				}
+			},
+			{
+				"_index": "myindex",
+				"_type": "Foundation_Features_CatalogContent_Product_GenericProduct",
+				"_id": "CatalogContent_b2fd5c96-8042-4da7-8196-177721597676_en",
+				"_score": 0.5227358,
+				"_source": {
+					"ContentLink": {}
+				},
+				"fields": {
+					"ContentLink.ID$$number": 36,
+					"Code$$string": "P-27312001"
+				}
+			},
+			{
+				"_index": "myindex",
+				"_type": "Foundation_Features_CatalogContent_Product_GenericProduct",
+				"_id": "CatalogContent_873cfa45-a12d-45c5-a8c0-2104bb913b0f_en",
+				"_score": 0.27660578,
+				"_source": {
+					"ContentLink": {}
+				},
+				"fields": {
+					"ContentLink.ID$$number": 38,
+					"Code$$string": "P-27312186"
+				}
+			}
+		]
+	}
+}
+```
+
+And... that's all folks. Basing on the RAW query, you may manipulate it and adjust to your needs. You can also remove/update expression parts to see which part of the query is responsible for the results. I've found this method very effective as results are immediate.
+
+The query analysis is also needed for building custom search queries (wildcard, fuzziness, proximity, boosting terms, etc.) and invoke them from a code.
+
 # Links
 
 * [Optimizely Search & Navigation developer documentation](https://docs.developers.optimizely.com/digital-experience-platform/v1.1.0-search-and-navigation/docs/getting-started)
 * [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html)
+   * [Query string query](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html)
