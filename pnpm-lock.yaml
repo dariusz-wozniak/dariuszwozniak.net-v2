@@ -148,8 +148,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0(eslint-config-prettier@8.8.0(eslint@8.45.0))(eslint@8.45.0)(prettier@3.3.3)
       husky:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^9.1.5
+        version: 9.1.5
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.9.0)
@@ -3259,9 +3259,9 @@ packages:
     resolution: {integrity: sha512-nZXjEF2nbo7lIw3mgYjItAfgQXog3OjJogSbKa2CQIIvSGWcKgeJnQlNXip6NglNzYH45nSRiEVimMvYL8DDqQ==}
     engines: {node: '>=14.18.0'}
 
-  husky@8.0.0:
-    resolution: {integrity: sha512-4qbE/5dzNDNxFEkX9MNRPKl5+omTXQzdILCUWiqG/lWIAioiM5vln265/l6I2Zx8gpW8l1ukZwGQeCFbBZ6+6w==}
-    engines: {node: '>=14'}
+  husky@9.1.5:
+    resolution: {integrity: sha512-rowAVRUBfI0b4+niA4SJMhfQwc107VLkBUgEYYAOQAbqDCnra1nYh83hF/MDmhYs9t9n1E3DuKOrs2LYNC+0Ag==}
+    engines: {node: '>=18'}
     hasBin: true
 
   iconv-lite@0.4.24:
@@ -9426,7 +9426,7 @@ snapshots:
 
   human-signals@4.3.1: {}
 
-  husky@8.0.0: {}
+  husky@9.1.5: {}
 
   iconv-lite@0.4.24:
     dependencies:
