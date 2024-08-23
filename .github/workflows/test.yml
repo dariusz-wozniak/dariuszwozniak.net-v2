@@ -1,24 +1,11 @@
-name: Frontend CI
+name: Tests
+
+on: [push]
 
 jobs:
-  jest:
-    runs-on: blacksmith-2vcpu-ubuntu-2204
+  build:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8.x.x
-
-      - name: Set up Node.js
-        uses: useblacksmith/setup-node@v5
-        with:
-          node-version: 18.12.1
-          cache: pnpm
-
-      - name: Install package.json dependencies with pnpm
-        run: pnpm install --frozen-lockfile
-
-      - name: Test with Jest
-        run: npm jest --silent --maxWorkers=2
+      - uses: actions/checkout@v1
+      - name: Run Jest
+        uses: stefanoeb/jest-action@1.0.4
