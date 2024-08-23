@@ -779,16 +779,17 @@ Instead of:
   ...
   "fields": [
     "ContentLink.ID$$number",
-    "Code$$string"
+    "Code$$string",
+    "Name$$string"
   ]
 ```
 
-...so the response is less cluttered and more human-readable:
+...so the response is less cluttered and more human-readable (we can see Content ID, code and name):
 
 
 ```json
 {
-	"took": 5,
+	"took": 6,
 	"timed_out": false,
 	"_shards": {
 		"total": 6,
@@ -797,17 +798,18 @@ Instead of:
 	},
 	"hits": {
 		"total": 3,
-		"max_score": 0.76414496,
+		"max_score": 0.6464435,
 		"hits": [
 			{
 				"_index": "myindex-en",
 				"_type": "Foundation_Features_CatalogContent_Product_GenericProduct",
 				"_id": "CatalogContent_fbe1fb54-d02e-493c-a64d-025217a34de3_en",
-				"_score": 0.76414496,
+				"_score": 0.6464435,
 				"_source": {
 					"ContentLink": {}
 				},
 				"fields": {
+					"Name$$string": "JODHPUR BOOT",
 					"ContentLink.ID$$number": 49,
 					"Code$$string": "P-39813617"
 				}
@@ -816,11 +818,12 @@ Instead of:
 				"_index": "myindex-en",
 				"_type": "Foundation_Features_CatalogContent_Product_GenericProduct",
 				"_id": "CatalogContent_b2fd5c96-8042-4da7-8196-177721597676_en",
-				"_score": 0.5227358,
+				"_score": 0.5669189,
 				"_source": {
 					"ContentLink": {}
 				},
 				"fields": {
+					"Name$$string": "JADE HIGH BOOT",
 					"ContentLink.ID$$number": 36,
 					"Code$$string": "P-27312001"
 				}
@@ -829,11 +832,12 @@ Instead of:
 				"_index": "myindex-en",
 				"_type": "Foundation_Features_CatalogContent_Product_GenericProduct",
 				"_id": "CatalogContent_873cfa45-a12d-45c5-a8c0-2104bb913b0f_en",
-				"_score": 0.27660578,
+				"_score": 0.2999853,
 				"_source": {
 					"ContentLink": {}
 				},
 				"fields": {
+					"Name$$string": "CLARA SHORT BOOT",
 					"ContentLink.ID$$number": 38,
 					"Code$$string": "P-27312186"
 				}
