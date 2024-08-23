@@ -1,4 +1,4 @@
-name: Run tests
+name: Run Tests
 on: push
 jobs:
   build:
@@ -6,6 +6,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install modules
-        run: yarn install
+        run: yarn install --no-immutable
       - name: Run tests
         run: yarn test
