@@ -21,8 +21,8 @@ importers:
         specifier: 13.5.6
         version: 13.5.6
       '@tailwindcss/forms':
-        specifier: ^0.5.4
-        version: 0.5.4(tailwindcss@3.3.3)
+        specifier: ^0.5.7
+        version: 0.5.7(tailwindcss@3.3.3)
       '@tailwindcss/typography':
         specifier: ^0.5.9
         version: 0.5.9(tailwindcss@3.3.3)
@@ -1654,8 +1654,8 @@ packages:
   '@swc/helpers@0.5.2':
     resolution: {integrity: sha512-E4KcWTpoLHqwPHLxidpOqQbcrZVgi0rsmmZXUle1jXmJfuIf/UWpczUJ7MZZ5tlxytgJXyp0w4PGkkeLiuIdZw==}
 
-  '@tailwindcss/forms@0.5.4':
-    resolution: {integrity: sha512-YAm12D3R7/9Mh4jFbYSMnsd6jG++8KxogWgqs7hbdo/86aWjjlIEvL7+QYdVELmAI0InXTpZqFIg5e7aDVWI2Q==}
+  '@tailwindcss/forms@0.5.7':
+    resolution: {integrity: sha512-QE7X69iQI+ZXwldE+rzasvbJiyV/ju1FGHH0Qn2W3FKbuYtqp8LKcy6iSw79fVUT5/Vvf+0XgLCeYVG+UV6hOw==}
     peerDependencies:
       tailwindcss: '>=3.0.0 || >= 3.0.0-alpha.1'
 
@@ -7434,7 +7434,7 @@ snapshots:
     dependencies:
       tslib: 2.6.2
 
-  '@tailwindcss/forms@0.5.4(tailwindcss@3.3.3)':
+  '@tailwindcss/forms@0.5.7(tailwindcss@3.3.3)':
     dependencies:
       mini-svg-data-uri: 1.4.4
       tailwindcss: 3.3.3

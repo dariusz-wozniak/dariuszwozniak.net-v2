@@ -7,7 +7,7 @@ Source code of the personal blog.
 * Direct link to posts: https://github.com/dariusz-wozniak/dariuszwozniak.net-v2/tree/main/data/blog/
 * Used starter: [Tailwind Nextjs Starter Blog](https://github.com/timlrx/tailwind-nextjs-starter-blog)
 
-## v1
+## v1 (old version)
 * Repo: https://github.com/dariusz-wozniak/dariuszwozniak.net
 * Mirror: https://dariuszwozniak.netlify.app/
 
