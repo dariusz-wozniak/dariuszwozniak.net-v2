@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@svgr/webpack": "^8.0.1",
-    "@testing-library/jest-dom": "^6.1.4",
+    "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^14.1.0",
     "@types/jest": "^29.5.8",
     "@types/mdx": "^2.0.13",
