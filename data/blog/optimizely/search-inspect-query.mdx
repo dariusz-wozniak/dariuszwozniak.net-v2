@@ -12,7 +12,7 @@ Optimizely Search & Navigation (a.k.a. EPiServer Find) ia a powerful engine but,
 EPiServer Find relies on the Elasticsearch engine. The Find client constructs the query that is being sent to Elasticsearch server and then Episerver process the response. Exact queries that are being sent can be catch in the following ways:
 
 * WireShark: rather advanced method
-* Set-up proxy server (e.g. Fiddler) and catch all the traffic: useful to analyze all the traffic to Elasticsearch
+* Set-up proxy server (e.g. Fiddler) and catch all the traffic: useful to analyze all the traffic to Elasticsearch[^1]
 * Debug internals of the Find client: the most convenient way, but it requires knowledge where to catch
 
 In this article I will focus on the last method.
@@ -860,3 +860,5 @@ Please note that there are other queries running in other places than the `Searc
 * [Optimizely Search & Navigation developer documentation](https://docs.developers.optimizely.com/digital-experience-platform/v1.1.0-search-and-navigation/docs/getting-started)
 * [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html)
    * [Query string query](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html)
+
+[^1]: Check out the [Charles Proxy](https://dariuszwozniak.net/blog/charles-proxy) article.
