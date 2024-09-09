@@ -1,0 +1,77 @@
+---
+title: 'How to setup Charles proxy for Windows, a.k.a. how to catch the localhost traffic with the example of ASP.NET Core project of the EPiServer Foundation'
+date: '2024-09-08'
+draft: false
+thumbnail: '/static/images/blog/thumbs/charles.jpg'
+tags: ['C-Sharp', 'EPiServer', 'Optimizely']
+summary: Charles is a tool that enables to view all HTTP(S) traffic between the current system and the Internet. Here I will show how to setup Charles to catch the localhost traffic with the example of ASP.NET Core and the EPiServer Foundation project.
+---
+
+Charles is a tool that enables to view all HTTP(S) traffic between the current system and the Internet. Here I will show how to setup Charles to catch the localhost traffic with the example of ASP.NET Core and the EPiServer Foundation project..
+
+<ArticleImage src={"/static/images/blog/charles-banner.png"} alt={"Logo / banner of the Charles"}/>
+
+Here, I will describe the feature called SSL Proxying. It allows to view the SSL traffic including request, response, headers, etc.
+
+By the official definition, it is:
+
+> Charles can be used as a man-in-the-middle HTTPS proxy, enabling you to view in plain text the communication between web browser and SSL web server.
+>
+> Charles does this by becoming a man-in-the-middle. Instead of your browser seeing the server’s certificate, Charles dynamically generates a certificate for the server and signs it with its own root certificate (the Charles CA Certificate). Charles receives the server’s certificate, while your browser receives Charles’s certificate. Therefore you will see a security warning, indicating that the root authority is not trusted. If you add the Charles CA Certificate to your trusted certificates you will no longer see any warnings – see below for how to do this.
+>
+> Charles still communicates via SSL to the web server. The communication is SSL (encrypted) from web browser to Charles and also SSL (encrypted) from Charles to the web server.
+>
+> This functionality is essential for debugging secure (SSL) web applications.
+
+## Installation and configuration
+
+Go to the [Charles website](https://www.charlesproxy.com/) and download the latest version. The installation is straightforward, just click on the installer and follow the instructions.
+
+Steps require to setup:
+
+1. Proxy -> ☑ Windows Proxy
+2. Help -> SSL Proxying -> Install Charles Root Certificate
+    1. Click on Install Certificate...
+    2. Current User or Local Machine
+    3. Place all certificates in the following store
+        1. Trusted Root Certification Authorities
+3. Proxy -> Proxy settings -> Proxies (tab) -> HTTP Proxy port: Set to expected port (e.g. 8888)
+4. Proxy -> Proxy settings -> Windows (tab)
+    1. ☑ Enable Windows Proxy
+    2. ☑ Enable Windows Proxy on launch
+
+Click on two buttons to enable the proxy on Windows and on launch:
+* Start Recording
+* Start SSL Proxying
+
+<ArticleImage src={"/static/images/blog/charles-toolbar.png"} alt={"The toolbar"}/>
+
+To ensure Proxy is properly configured, go to the Control Panel -> Network & Internet -> Proxy -> Use a proxy server. Check your Proxy IP address and port. Example of the proper configuration:
+
+```
+http=127.0.0.1:8888;https=127.0.0.1:8888
+```
+
+Now, you may run the application and see the traffic in Charles. For example, I'm running [the forked EPiServer Foundation](https://github.com/dariusz-wozniak/OptimizelyFoundation) project with the ASP.NET Core to catch the EPiServer Find traffic.[^1]
+
+## Results
+
+Now, you suppose to see all the traffic coming through the Charles. For example, when it comes to the EPiServer Foundation project, you may see the traffic between the EPiServer Find and the Elasticsearch server. In the list of the traffic, I clicked on the Focus for the `service.find.episerver.net` and see what's the traffic there:
+
+<ArticleImage src={"/static/images/blog/charles-results.png"} alt={"Results view"}/>
+
+We can see the EPiServer Find traffic coming through, including the search requests, suggestions (`_didyoumean`) and the Indexing (Search & Navigation Content Indexing Job) scheduled job requests (`_bulk`).
+
+The request / response details along with other information (rq / rs headers are displayed in the right pane) are shown:
+
+<ArticleImage src={"/static/images/blog/charles-results-details.png"} alt={"Details of the JSON request and the response"}/>
+
+## Conclusion
+
+I'm using proxy tools very frequently to verify what's the hidden traffic for the 3rd party libs.
+
+The web proxy tools might be also useful for other scenarios, like debugging the API requests, inspecting the headers, modifying the requests, mocking the responses, repeat request multiple times, etc.
+
+So far, I tested many proxy tools for Windows, including Telerik Fiddler, Telerik Fiddler Everywhere, Requestly, mitmproxy, Proxyman, HTTP Toolkit, and Fluxzy. I've found the Charles to be most suitable solution that runs with no problems and is easy to use. There's a free trial, the cost of the app is $50 for a single license, but I would recommend to add it to the daily dev toolkit. The alternative is Telerik Fiddler Everywhere, but it is more expensive and requires monthly subscription. Other tools required too many steps to configure and were not so user-friendly. If you wish to find any free alternative, please feel free to experiment with other tools or even write own proxy server (which is not that difficult as it sounds).
+
+[^1]: Check out the [Optimizely Search / Episerver Find: Inspect the underlying query](https://dariuszwozniak.net/blog/optimizely/search-inspect-query) article.
