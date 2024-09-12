@@ -1,0 +1,75 @@
+---
+title: 'Swap values via deconstruction in C#'
+date: '2024-09-12'
+draft: false
+thumbnail: '/static/images/blog/thumbs/swapxy.jpg'
+tags: ['C-Sharp']
+summary: One of the feature of the C# allows to swap values via deconstruction (without using temporary variable). It was introduced while ago (C# 7.0), but I oversaw it. It's a nice feature that allows to swap values in a very elegant way.
+---
+
+One of the feature of the C# allows to swap values via deconstruction (without using temporary variable). It was introduced while ago (C# 7.0), but I oversaw it. It's a nice feature that allows to swap values in a very elegant way.
+
+So, the before code is:
+
+```csharp
+var temp = a;
+a = b;
+b = temp;
+```
+
+And now, we can do it in a more elegant way + with no variable declaration:
+
+```csharp
+(a, b) = (b, a);
+```
+
+Whoa! That's cool! 😎
+
+But wait, do we have a temporary variable allocated? Let's dig into it deeper.
+
+By looking into the decompiled code[^1], we can see that there is the temporary variable, but it's not allocated (it is stored in the stack):
+
+```csharp
+int b = P_0.b;
+int num = (P_0.b = P_0.a);
+P_0.a = b;
+```
+
+Now, let's see if the JIT assembly code differs from the non-tuple-deconstruction code:
+
+The full code is:
+
+```csharp
+int a, b;
+
+void tuple_deconstruction() => (a, b) = (b, a);
+
+void old_way()
+{
+    int num = a;
+    a = b;
+    b = num;
+}
+```
+
+The JIT code is:
+
+```asm
+C.tuple_deconstruction()
+    L0000: mov eax, [rcx+0xc]
+    L0003: mov edx, [rcx+8]
+    L0006: mov [rcx+8], eax
+    L0009: mov [rcx+0xc], edx
+    L000c: ret
+
+C.old_way()
+    L0000: mov eax, [rcx+8]
+    L0003: mov edx, [rcx+0xc]
+    L0006: mov [rcx+8], edx
+    L0009: mov [rcx+0xc], eax
+    L000c: ret
+```
+
+So, it's the same - swapping is done in a different order, but the logic is the same.
+
+[^1]: Core CLR 8.0.724.31311 on x64

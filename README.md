@@ -15,6 +15,9 @@ Source code of the personal blog.
 
 ```bash
 yarn install
+```
+
+```bash
 yarn start
 ```
 
