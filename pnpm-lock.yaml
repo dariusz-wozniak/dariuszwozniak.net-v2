@@ -52,25 +52,25 @@ importers:
         version: 0.8.19
       next:
         specifier: 14.1.1
-        version: 14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.3.1))(react@18.3.1)
       next-contentlayer:
         specifier: 0.3.4
-        version: 0.3.4(contentlayer@0.3.4(esbuild@0.18.11))(esbuild@0.18.11)(next@14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 0.3.4(contentlayer@0.3.4(esbuild@0.18.11))(esbuild@0.18.11)(next@14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.3.1))(react@18.3.1))(react-dom@18.2.0(react@18.3.1))(react@18.3.1)
       next-themes:
         specifier: ^0.3.0
-        version: 0.3.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 0.3.0(react-dom@18.2.0(react@18.3.1))(react@18.3.1)
       pliny:
         specifier: 0.1.4
-        version: 0.1.4(@algolia/client-search@4.20.0)(@types/react-dom@18.2.15)(@types/react@18.2.14)(esbuild@0.18.11)(next@14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(search-insights@2.10.0)
+        version: 0.1.4(@algolia/client-search@4.20.0)(@types/react-dom@18.2.15)(@types/react@18.3.5)(esbuild@0.18.11)(next@14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.3.1))(react@18.3.1))(react-dom@18.2.0(react@18.3.1))(react@18.3.1)(search-insights@2.10.0)
       postcss:
         specifier: ^8.4.31
         version: 8.4.31
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 18.3.1
+        version: 18.3.1
       react-dom:
         specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        version: 18.2.0(react@18.3.1)
       reading-time:
         specifier: 1.5.0
         version: 1.5.0
@@ -116,7 +116,7 @@ importers:
         version: 6.5.0
       '@testing-library/react':
         specifier: ^14.1.0
-        version: 14.1.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 14.1.0(react-dom@18.2.0(react@18.3.1))(react@18.3.1)
       '@types/jest':
         specifier: ^29.5.8
         version: 29.5.8
@@ -124,8 +124,8 @@ importers:
         specifier: ^2.0.13
         version: 2.0.13
       '@types/react':
-        specifier: ^18.2.14
-        version: 18.2.14
+        specifier: ^18.3.5
+        version: 18.3.5
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.1.0
         version: 6.1.0(@typescript-eslint/parser@6.21.0(eslint@8.45.0)(typescript@5.5.4))(eslint@8.45.0)(typescript@5.5.4)
@@ -1785,14 +1785,11 @@ packages:
   '@types/react-dom@18.2.15':
     resolution: {integrity: sha512-HWMdW+7r7MR5+PZqJF6YFNSCtjz1T0dsvo/f1BV6HkV+6erD/nA7wd9NM00KVG83zf2nJ7uATPO9ttdIPvi3gg==}
 
-  '@types/react@18.2.14':
-    resolution: {integrity: sha512-A0zjq+QN/O0Kpe30hA1GidzyFjatVvrpIvWLxD+xv67Vt91TWWgco9IvrJBkeyHm1trGaFS/FSGqPlhyeZRm0g==}
+  '@types/react@18.3.5':
+    resolution: {integrity: sha512-WeqMfGJLGuLCqHGYRGHxnKrXcTitc6L/nBUWfWPcTarG3t9PsquqUMuVeXZeca+mglY4Vo5GZjCi0A3Or2lnxA==}
 
   '@types/resolve@1.20.5':
     resolution: {integrity: sha512-aten5YPFp8G+cMpkTK5MCcUW5GlwZUby+qlt0/3oFgOCooFgzqvZQ9/0tROY49sUYmhEybBBj3jwpkQ/R3rjjw==}
-
-  '@types/scheduler@0.16.6':
-    resolution: {integrity: sha512-Vlktnchmkylvc9SnwwwozTv04L/e1NykF5vgoQ0XTmI8DD+wxfjQuHuvHS3p0r2jz2x2ghPs2h1FVeDirIteWA==}
 
   '@types/semver@7.5.5':
     resolution: {integrity: sha512-+d+WYC1BxJ6yVOgUgzK8gWvp5qF8ssV5r4nsDcZWKRWcDQLQ619tvWAxJQYGgBrO1MnLJC7a5GtiYsAoQ47dJg==}
@@ -4877,8 +4874,8 @@ packages:
     peerDependencies:
       react: ^16.6.3 || ^17.0.0
 
-  react@18.2.0:
-    resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
+  react@18.3.1:
+    resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
     engines: {node: '>=0.10.0'}
 
   read-cache@1.0.0:
@@ -6929,16 +6926,16 @@ snapshots:
 
   '@docsearch/css@3.5.2': {}
 
-  '@docsearch/react@3.5.2(@algolia/client-search@4.20.0)(@types/react@18.2.14)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(search-insights@2.10.0)':
+  '@docsearch/react@3.5.2(@algolia/client-search@4.20.0)(@types/react@18.3.5)(react-dom@18.2.0(react@18.3.1))(react@18.3.1)(search-insights@2.10.0)':
     dependencies:
       '@algolia/autocomplete-core': 1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)(search-insights@2.10.0)
       '@algolia/autocomplete-preset-algolia': 1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)
       '@docsearch/css': 3.5.2
       algoliasearch: 4.20.0
     optionalDependencies:
-      '@types/react': 18.2.14
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      '@types/react': 18.3.5
+      react: 18.3.1
+      react-dom: 18.2.0(react@18.3.1)
       search-insights: 2.10.0
     transitivePeerDependencies:
       - '@algolia/client-search'
@@ -7075,11 +7072,11 @@ snapshots:
 
   '@fal-works/esbuild-plugin-global-externals@2.1.2': {}
 
-  '@giscus/react@2.3.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@giscus/react@2.3.0(react-dom@18.2.0(react@18.3.1))(react@18.3.1)':
     dependencies:
       giscus: 1.3.0
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 18.3.1
+      react-dom: 18.2.0(react@18.3.1)
 
   '@grpc/grpc-js@1.11.1':
     dependencies:
@@ -7548,40 +7545,40 @@ snapshots:
 
   '@protobufjs/utf8@1.1.0': {}
 
-  '@radix-ui/react-compose-refs@1.0.1(@types/react@18.2.14)(react@18.2.0)':
+  '@radix-ui/react-compose-refs@1.0.1(@types/react@18.3.5)(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.23.2
-      react: 18.2.0
+      react: 18.3.1
     optionalDependencies:
-      '@types/react': 18.2.14
+      '@types/react': 18.3.5
 
-  '@radix-ui/react-portal@1.0.4(@types/react-dom@18.2.15)(@types/react@18.2.14)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@radix-ui/react-portal@1.0.4(@types/react-dom@18.2.15)(@types/react@18.3.5)(react-dom@18.2.0(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.23.2
-      '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.15)(@types/react@18.2.14)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.15)(@types/react@18.3.5)(react-dom@18.2.0(react@18.3.1))(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.2.0(react@18.3.1)
     optionalDependencies:
-      '@types/react': 18.2.14
+      '@types/react': 18.3.5
       '@types/react-dom': 18.2.15
 
-  '@radix-ui/react-primitive@1.0.3(@types/react-dom@18.2.15)(@types/react@18.2.14)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@radix-ui/react-primitive@1.0.3(@types/react-dom@18.2.15)(@types/react@18.3.5)(react-dom@18.2.0(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.23.2
-      '@radix-ui/react-slot': 1.0.2(@types/react@18.2.14)(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      '@radix-ui/react-slot': 1.0.2(@types/react@18.3.5)(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.2.0(react@18.3.1)
     optionalDependencies:
-      '@types/react': 18.2.14
+      '@types/react': 18.3.5
       '@types/react-dom': 18.2.15
 
-  '@radix-ui/react-slot@1.0.2(@types/react@18.2.14)(react@18.2.0)':
+  '@radix-ui/react-slot@1.0.2(@types/react@18.3.5)(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.23.2
-      '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.14)(react@18.2.0)
-      react: 18.2.0
+      '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.3.5)(react@18.3.1)
+      react: 18.3.1
     optionalDependencies:
-      '@types/react': 18.2.14
+      '@types/react': 18.3.5
 
   '@reach/observe-rect@1.2.0': {}
 
@@ -7728,13 +7725,13 @@ snapshots:
       lodash: 4.17.21
       redent: 3.0.0
 
-  '@testing-library/react@14.1.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@testing-library/react@14.1.0(react-dom@18.2.0(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.23.2
       '@testing-library/dom': 9.3.3
       '@types/react-dom': 18.2.15
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 18.3.1
+      react-dom: 18.2.0(react@18.3.1)
 
   '@tootallnate/once@2.0.0': {}
 
@@ -7842,17 +7839,14 @@ snapshots:
 
   '@types/react-dom@18.2.15':
     dependencies:
-      '@types/react': 18.2.14
+      '@types/react': 18.3.5
 
-  '@types/react@18.2.14':
+  '@types/react@18.3.5':
     dependencies:
       '@types/prop-types': 15.7.10
-      '@types/scheduler': 0.16.6
       csstype: 3.1.2
 
   '@types/resolve@1.20.5': {}
-
-  '@types/scheduler@0.16.6': {}
 
   '@types/semver@7.5.5': {}
 
@@ -10483,14 +10477,14 @@ snapshots:
     dependencies:
       commander: 8.3.0
 
-  kbar@0.1.0-beta.43(@types/react-dom@18.2.15)(@types/react@18.2.14)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  kbar@0.1.0-beta.43(@types/react-dom@18.2.15)(@types/react@18.3.5)(react-dom@18.2.0(react@18.3.1))(react@18.3.1):
     dependencies:
-      '@radix-ui/react-portal': 1.0.4(@types/react-dom@18.2.15)(@types/react@18.2.14)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@radix-ui/react-portal': 1.0.4(@types/react-dom@18.2.15)(@types/react@18.3.5)(react-dom@18.2.0(react@18.3.1))(react@18.3.1)
       fast-equals: 2.0.4
       fuse.js: 6.6.2
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-virtual: 2.10.4(react@18.2.0)
+      react: 18.3.1
+      react-dom: 18.2.0(react@18.3.1)
+      react-virtual: 2.10.4(react@18.3.1)
       tiny-invariant: 1.3.1
     transitivePeerDependencies:
       - '@types/react'
@@ -11376,32 +11370,32 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  next-contentlayer@0.3.4(contentlayer@0.3.4(esbuild@0.18.11))(esbuild@0.18.11)(next@14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  next-contentlayer@0.3.4(contentlayer@0.3.4(esbuild@0.18.11))(esbuild@0.18.11)(next@14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.3.1))(react@18.3.1))(react-dom@18.2.0(react@18.3.1))(react@18.3.1):
     dependencies:
       '@contentlayer/core': 0.3.4(esbuild@0.18.11)
       '@contentlayer/utils': 0.3.4
       contentlayer: 0.3.4(esbuild@0.18.11)
-      next: 14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      next: 14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.3.1))(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.2.0(react@18.3.1)
     transitivePeerDependencies:
       - '@effect-ts/otel-node'
       - esbuild
       - markdown-wasm
       - supports-color
 
-  next-themes@0.2.1(next@14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  next-themes@0.2.1(next@14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.3.1))(react@18.3.1))(react-dom@18.2.0(react@18.3.1))(react@18.3.1):
     dependencies:
-      next: 14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      next: 14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.3.1))(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.2.0(react@18.3.1)
 
-  next-themes@0.3.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  next-themes@0.3.0(react-dom@18.2.0(react@18.3.1))(react@18.3.1):
     dependencies:
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 18.3.1
+      react-dom: 18.2.0(react@18.3.1)
 
-  next@14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  next@14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.3.1))(react@18.3.1):
     dependencies:
       '@next/env': 14.1.1
       '@swc/helpers': 0.5.2
@@ -11409,9 +11403,9 @@ snapshots:
       caniuse-lite: 1.0.30001617
       graceful-fs: 4.2.11
       postcss: 8.4.31
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      styled-jsx: 5.1.1(@babel/core@7.23.3)(react@18.2.0)
+      react: 18.3.1
+      react-dom: 18.2.0(react@18.3.1)
+      styled-jsx: 5.1.1(@babel/core@7.23.3)(react@18.3.1)
     optionalDependencies:
       '@next/swc-darwin-arm64': 14.1.1
       '@next/swc-darwin-x64': 14.1.1
@@ -11682,22 +11676,22 @@ snapshots:
     dependencies:
       find-up: 4.1.0
 
-  pliny@0.1.4(@algolia/client-search@4.20.0)(@types/react-dom@18.2.15)(@types/react@18.2.14)(esbuild@0.18.11)(next@14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(search-insights@2.10.0):
+  pliny@0.1.4(@algolia/client-search@4.20.0)(@types/react-dom@18.2.15)(@types/react@18.3.5)(esbuild@0.18.11)(next@14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.3.1))(react@18.3.1))(react-dom@18.2.0(react@18.3.1))(react@18.3.1)(search-insights@2.10.0):
     dependencies:
-      '@docsearch/react': 3.5.2(@algolia/client-search@4.20.0)(@types/react@18.2.14)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(search-insights@2.10.0)
-      '@giscus/react': 2.3.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@docsearch/react': 3.5.2(@algolia/client-search@4.20.0)(@types/react@18.3.5)(react-dom@18.2.0(react@18.3.1))(react@18.3.1)(search-insights@2.10.0)
+      '@giscus/react': 2.3.0(react-dom@18.2.0(react@18.3.1))(react@18.3.1)
       '@mailchimp/mailchimp_marketing': 3.0.80
       contentlayer: 0.3.4(esbuild@0.18.11)
       copyfiles: 2.4.1
       github-slugger: 1.4.0
       image-size: 1.0.0
       js-yaml: 4.1.0
-      kbar: 0.1.0-beta.43(@types/react-dom@18.2.15)(@types/react@18.2.14)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      next: 14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      next-contentlayer: 0.3.4(contentlayer@0.3.4(esbuild@0.18.11))(esbuild@0.18.11)(next@14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      next-themes: 0.2.1(next@14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      kbar: 0.1.0-beta.43(@types/react-dom@18.2.15)(@types/react@18.3.5)(react-dom@18.2.0(react@18.3.1))(react@18.3.1)
+      next: 14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.3.1))(react@18.3.1)
+      next-contentlayer: 0.3.4(contentlayer@0.3.4(esbuild@0.18.11))(esbuild@0.18.11)(next@14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.3.1))(react@18.3.1))(react-dom@18.2.0(react@18.3.1))(react@18.3.1)
+      next-themes: 0.2.1(next@14.1.1(@babel/core@7.23.3)(@opentelemetry/api@1.4.1)(react-dom@18.2.0(react@18.3.1))(react@18.3.1))(react-dom@18.2.0(react@18.3.1))(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.2.0(react@18.3.1)
       remark: 14.0.2
       unist-util-visit: 4.1.0
     transitivePeerDependencies:
@@ -11828,10 +11822,10 @@ snapshots:
     dependencies:
       inherits: 2.0.4
 
-  react-dom@18.2.0(react@18.2.0):
+  react-dom@18.2.0(react@18.3.1):
     dependencies:
       loose-envify: 1.4.0
-      react: 18.2.0
+      react: 18.3.1
       scheduler: 0.23.0
 
   react-is@16.13.1: {}
@@ -11840,12 +11834,12 @@ snapshots:
 
   react-is@18.2.0: {}
 
-  react-virtual@2.10.4(react@18.2.0):
+  react-virtual@2.10.4(react@18.3.1):
     dependencies:
       '@reach/observe-rect': 1.2.0
-      react: 18.2.0
+      react: 18.3.1
 
-  react@18.2.0:
+  react@18.3.1:
     dependencies:
       loose-envify: 1.4.0
 
@@ -12660,10 +12654,10 @@ snapshots:
     dependencies:
       inline-style-parser: 0.1.1
 
-  styled-jsx@5.1.1(@babel/core@7.23.3)(react@18.2.0):
+  styled-jsx@5.1.1(@babel/core@7.23.3)(react@18.3.1):
     dependencies:
       client-only: 0.0.1
-      react: 18.2.0
+      react: 18.3.1
     optionalDependencies:
       '@babel/core': 7.23.3
 
