@@ -15,6 +15,14 @@ When we develop a project, we often add new properties to the classes. However, 
 
 Historically, it was possible in the old Episerver Commerce, but that feature is gone as for now.
 
+> [!CAUTION]
+> This scheduled job was tested locally with a few test cases. Please review the code and test it in your environment before running it in production. Please also make sure you have a backup of your database before running this scheduled job.
+> The software is provided as is and you use it at your own risk.
+
 # Automatically
 
-I just created the [Opti.Addons](https://github.com/Opti-Addons) project which contains small handy tools for Optimizely. The first tool is called [DeleteMissingCommercePropertiesScheduledJob](https://github.com/Opti-Addons/Opti.Addons.DeleteMissingCommercePropertiesScheduledJob) and is basically a scheduled job that removes obsolete properties from the database.
+I just created the [Opti.Addons](https://github.com/Opti-Addons) project which in future will contain small handy tools for Optimizely. The first tool is called [DeleteMissingCommercePropertiesScheduledJob](https://github.com/Opti-Addons/Opti.Addons.DeleteMissingCommercePropertiesScheduledJob) and is basically a scheduled job that removes obsolete properties from the database. In order to use it, just install the NuGet package and see two scheduled jobs: one for the listing of properties that are not in the code and the second one for removing them.
+
+# Manually
+
+Well, you might want to create a migration step, some initializable code, or any other way to remove the properties. Just re-use (read: copy and paste) the code from the project: [MissingCommercePropertiesService.cs](https://github.com/Opti-Addons/Opti.Addons.DeleteMissingCommercePropertiesScheduledJob/blob/main/MissingCommercePropertiesService.cs).
