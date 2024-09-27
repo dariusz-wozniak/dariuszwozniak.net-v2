@@ -1,0 +1,30 @@
+---
+title: 'Optimizely / Episerver: How to remove obsolete Commerce data; Also, introducing the Opti.Addons project'
+date: '2024-09-27'
+draft: false
+tags: ['EPiServer', 'Optimizely', 'Opti.Addons']
+thumbnail: '/static/images/blog/thumbs/remove-old-commerce-data.jpg'
+summary: By default Optimizely code does not remove properties from the database when you remove them from the code - This article describes how to remove obsolete Commerce data and introduces the Opti.Addons project.
+---
+
+By default, Optimizely code does not remove properties from the database when you remove them from the code. This article describes how to remove obsolete Commerce data and introduces the Opti.Addons project.
+
+### Introduction
+
+When we develop a project, we often add new properties to the classes. However, when we remove them, the properties are not removed from the database. This can lead to a situation where the database contains obsolete data that is no longer used in the code. This article describes how to remove that data.
+
+Historically, it was possible in the old Episerver Commerce, but that feature is gone as for now.
+
+### Automatically
+
+I just created the [Opti.Addons](https://github.com/Opti-Addons) project which in future will contain small handy tools for Optimizely. The first tool is called [DeleteMissingCommercePropertiesScheduledJob](https://github.com/Opti-Addons/Opti.Addons.DeleteMissingCommercePropertiesScheduledJob) and is basically a scheduled job that removes obsolete properties from the database. In order to use it, just install the NuGet package and see two scheduled jobs: one for the listing of properties that are not in the code (for verification before removal) and the second one for removing them.
+
+### Manually
+
+Well, you might want to create a migration step, some initializable code, or any other way to remove the properties. To do that, just re-use (read: copy and paste) the code from the project: [MissingCommercePropertiesService.cs](https://github.com/Opti-Addons/Opti.Addons.DeleteMissingCommercePropertiesScheduledJob/blob/main/MissingCommercePropertiesService.cs).
+
+# Links
+
+* [Opti.Addons](https://github.com/Opti-Addons) project
+* [DeleteMissingCommercePropertiesScheduledJob](https://github.com/Opti-Addons/Opti.Addons.DeleteMissingCommercePropertiesScheduledJob)
+    * [NuGet package](https://www.nuget.org/packages/Opti.Addons.DeleteMissingCommercePropertiesScheduledJob)
