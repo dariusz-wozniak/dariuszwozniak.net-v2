@@ -26,7 +26,6 @@
     "image-size": "1.1.1",
     "lint": "^0.8.19",
     "next": "14.2.11",
-    "next-contentlayer": "0.3.4",
     "next-contentlayer2": "^0.5.1",
     "next-themes": "^0.3.0",
     "pliny": "0.1.4",
