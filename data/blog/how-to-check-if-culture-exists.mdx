@@ -1,5 +1,5 @@
 ---
-title: How to check if culture exists in .NET?
+title: How to check if a culture exists in .NET?
 date: '2024-10-08'
 draft: false
 thumbnail: '/static/images/blog/thumbs/culture-exists.jpg'
@@ -31,7 +31,8 @@ public class CultureExistsBenchmarks
     [Benchmark]
     public void culture_info_get_cultures() =>
         CultureInfo.GetCultures(CultureTypes.AllCultures)
-                   .Any(culture => string.Equals(culture.Name, "zzz", StringComparison.CurrentCultureIgnoreCase));
+                   .Any(culture => string.Equals(culture.Name, "zzz",
+                        StringComparison.CurrentCultureIgnoreCase));
 }
 ```
 
