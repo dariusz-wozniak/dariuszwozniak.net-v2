@@ -13,13 +13,12 @@ The first option is to use the `CultureInfo.GetCultureInfo` method. The method t
 
 The second option would be to get all cultures and check if the given culture exists in the list. The `CultureInfo.GetCultures` method returns all cultures that are available in the system. In this case, we don't wrap the code in the catch block, so it could be more efficient. But... the method does not use its internal cache, so the lookup is done on an each call.
 
-Let's compare the performance of both methods. I will use the `BenchmarkDotNet` library to measure the performance of both methods. The benchmark will be run on the .NET 8.0 platform.
+Let's compare the performance of both methods. I will use the `BenchmarkDotNet` library to measure the performance of both methods. The benchmark will be run on the .NET 8.0 platform. I'm testing the culture named "zzz" which obviously does not exist.
 
 The code for the benchmark is as follows:
 
 ```csharp
 [SimpleJob]
-[RPlotExporter]
 public class CultureExistsBenchmarks
 {
     [Benchmark]
@@ -31,7 +30,8 @@ public class CultureExistsBenchmarks
 
     [Benchmark]
     public void culture_info_get_cultures() =>
-        CultureInfo.GetCultures(CultureTypes.AllCultures).Any(culture => string.Equals(culture.Name, "zzz", StringComparison.CurrentCultureIgnoreCase));
+        CultureInfo.GetCultures(CultureTypes.AllCultures)
+                   .Any(culture => string.Equals(culture.Name, "zzz", StringComparison.CurrentCultureIgnoreCase));
 }
 ```
 
