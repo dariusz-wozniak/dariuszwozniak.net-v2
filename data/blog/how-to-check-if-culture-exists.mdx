@@ -1,0 +1,60 @@
+---
+title: How to check if a culture exists in .NET?
+date: '2024-10-08'
+draft: false
+thumbnail: '/static/images/blog/thumbs/culture-exists.jpg'
+tags: ['C-Sharp', 'Locale', 'Performance']
+summary: How to efficiently check if a given culture exists in .NET?
+---
+
+How to check if a given culture exists in .NET? Let's explore the options and find the most efficient way to check if a culture exists in .NET.
+
+The first option is to use the `CultureInfo.GetCultureInfo` method. The method throws an exception of `CultureNotFoundException` type when culture does not exist in the system. One can argue that this might be not the most efficient way to check as it is related with the try-catch overhead. The big benefit is that the method has a thread-safe cached culture instance. Noted. Let's see what else we can do.
+
+The second option would be to get all cultures and check if the given culture exists in the list. The `CultureInfo.GetCultures` method returns all cultures that are available in the system. In this case, we don't wrap the code in the catch block, so it could be more efficient. But... the method does not use its internal cache, so the lookup is done on an each call.
+
+Let's compare the performance of both methods. I will use the `BenchmarkDotNet` library to measure the performance of both methods. The benchmark will be run on the .NET 8.0 platform. I'm testing the culture named "zzz" which obviously does not exist.
+
+The code for the benchmark is as follows:
+
+```csharp
+[SimpleJob]
+public class CultureExistsBenchmarks
+{
+    [Benchmark]
+    public void try_catch()
+    {
+        try { CultureInfo.GetCultureInfo("zzz"); }
+        catch (CultureNotFoundException) { }
+    }
+
+    [Benchmark]
+    public void culture_info_get_cultures() =>
+        CultureInfo.GetCultures(CultureTypes.AllCultures)
+                   .Any(culture => string.Equals(culture.Name, "zzz",
+                        StringComparison.CurrentCultureIgnoreCase));
+}
+```
+
+The results of the benchmark are as follows:
+
+```plaintext
+BenchmarkDotNet v0.14.0, Windows 11 (10.0.22631.4249/23H2/2023Update/SunValley3)
+12th Gen Intel Core i5-12400F, 1 CPU, 12 logical and 6 physical cores
+.NET SDK 8.0.304
+  [Host]     : .NET 8.0.8 (8.0.824.36612), X64 RyuJIT AVX2
+  DefaultJob : .NET 8.0.8 (8.0.824.36612), X64 RyuJIT AVX2
+
+
+| Method                    | Mean         | Error        | StdDev       |
+|-------------------------- |-------------:|-------------:|-------------:|
+| try_catch                 |     20.95 ns |     0.440 ns |     0.412 ns |
+| culture_info_get_cultures | 80,451.04 ns | 1,150.481 ns | 1,076.160 ns |
+
+```
+
+We can see almost 4k times difference in performance between both methods. The `try_catch` method is much faster than the `culture_info_get_cultures` method. So, in the conclusion, despite the try-catch overhead, the `CultureInfo.GetCultureInfo` method is the most efficient way to check if a culture exists in .NET.
+
+What else we can do?
+
+If we know cultures up-front, we can create a dictionary with all cultures and check if the given culture exists in the dictionary. This way, we can avoid the try-catch overhead and the lookup in the list of cultures.
