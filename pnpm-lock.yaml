@@ -115,8 +115,8 @@ importers:
         specifier: ^6.5.0
         version: 6.5.0
       '@testing-library/react':
-        specifier: ^15.0.7
-        version: 15.0.7(@types/react@18.3.5)(react-dom@18.2.0(react@18.3.1))(react@18.3.1)
+        specifier: ^16.0.1
+        version: 16.0.1(@testing-library/dom@10.4.0)(@types/react-dom@18.2.15)(@types/react@18.3.5)(react-dom@18.2.0(react@18.3.1))(react@18.3.1)
       '@types/jest':
         specifier: ^29.5.8
         version: 29.5.8
@@ -1683,15 +1683,19 @@ packages:
     resolution: {integrity: sha512-xGGHpBXYSHUUr6XsKBfs85TWlYKpTc37cSBBVrXcib2MkHLboWlkClhWF37JKlDb9KEq3dHs+f2xR7XJEWGBxA==}
     engines: {node: '>=14', npm: '>=6', yarn: '>=1'}
 
-  '@testing-library/react@15.0.7':
-    resolution: {integrity: sha512-cg0RvEdD1TIhhkm1IeYMQxrzy0MtUNfa3minv4MjbgcYzJAZ7yD0i0lwoPOTPr+INtiXFezt2o8xMSnyHhEn2Q==}
+  '@testing-library/react@16.0.1':
+    resolution: {integrity: sha512-dSmwJVtJXmku+iocRhWOUFbrERC76TX2Mnf0ATODz8brzAZrMBbzLwQixlBSanZxR6LddK3eiwpSFZgDET1URg==}
     engines: {node: '>=18'}
     peerDependencies:
+      '@testing-library/dom': ^10.0.0
       '@types/react': ^18.0.0
+      '@types/react-dom': ^18.0.0
       react: ^18.0.0
       react-dom: ^18.0.0
     peerDependenciesMeta:
       '@types/react':
+        optional: true
+      '@types/react-dom':
         optional: true
 
   '@tootallnate/once@2.0.0':
@@ -7719,15 +7723,15 @@ snapshots:
       lodash: 4.17.21
       redent: 3.0.0
 
-  '@testing-library/react@15.0.7(@types/react@18.3.5)(react-dom@18.2.0(react@18.3.1))(react@18.3.1)':
+  '@testing-library/react@16.0.1(@testing-library/dom@10.4.0)(@types/react-dom@18.2.15)(@types/react@18.3.5)(react-dom@18.2.0(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.23.2
       '@testing-library/dom': 10.4.0
-      '@types/react-dom': 18.2.15
       react: 18.3.1
       react-dom: 18.2.0(react@18.3.1)
     optionalDependencies:
       '@types/react': 18.3.5
+      '@types/react-dom': 18.2.15
 
   '@tootallnate/once@2.0.0': {}
 
@@ -7836,6 +7840,7 @@ snapshots:
   '@types/react-dom@18.2.15':
     dependencies:
       '@types/react': 18.3.5
+    optional: true
 
   '@types/react@18.3.5':
     dependencies:
