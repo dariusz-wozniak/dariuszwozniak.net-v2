@@ -14,17 +14,17 @@ Source code of the personal blog.
 ## How to start?
 
 ```bash
-yarn install
+pnpm install
 ```
 
 ```bash
-yarn start
+pnpm start
 ```
 
 Run tests:
 
 ```bash
-yarn test
+pnpm test
 ```
 
 Debug:

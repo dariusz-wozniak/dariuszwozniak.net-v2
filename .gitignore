@@ -47,3 +47,6 @@ yarn-error.log*
 .contentlayer
 
 .env
+
+/yarn.lock
+/pnpm-lock.yaml
