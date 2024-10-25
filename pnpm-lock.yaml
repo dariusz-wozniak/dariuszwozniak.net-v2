@@ -78,8 +78,8 @@ importers:
         specifier: ^6.1.0
         version: 6.1.0
       rehype-citation:
-        specifier: ^1.0.2
-        version: 1.0.2
+        specifier: ^2.2.1
+        version: 2.2.1
       rehype-katex:
         specifier: ^6.0.3
         version: 6.0.3
@@ -889,9 +889,9 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  '@citation-js/core@0.6.9':
-    resolution: {integrity: sha512-ElG4cvedkaRm/a40yhWXOUPUzAImwqI7ZmIyL55GIR4EmfQ5PkaSEcFhA3dekMa66l52ddn4lQaNVO+/yECq9A==}
-    engines: {node: '>=14.0.0'}
+  '@citation-js/core@0.7.14':
+    resolution: {integrity: sha512-dgeGqYDSQmn2MtnWZkwPGpJQPh43yr1lAAr9jl1NJ9pIY1RXUQxtlAUZVur0V9PHdbfQC+kkvB1KC3VpgVV3MA==}
+    engines: {node: '>=16.0.0'}
 
   '@citation-js/date@0.5.1':
     resolution: {integrity: sha512-1iDKAZ4ie48PVhovsOXQ+C6o55dWJloXqtznnnKy6CltJBQLIuLLuUqa8zlIvma0ZigjVjgDUhnVaNU1MErtZw==}
@@ -901,23 +901,23 @@ packages:
     resolution: {integrity: sha512-brSPsjs2fOVzSnARLKu0qncn6suWjHVQtrqSUrnqyaRH95r/Ad4wPF5EsoWr+Dx8HzkCGb/ogmoAzfCsqlTwTQ==}
     engines: {node: '>=6'}
 
-  '@citation-js/plugin-bibjson@0.6.9':
-    resolution: {integrity: sha512-AJI9kiMLeFm7tQ8mPXJ+DpABB0e9ZN8nchhxNnWcfy3Q5RB/i76RF6S/QEsDcQ4vdP4nWmBsKT9UmKdWkFrOQA==}
-    engines: {node: '>=14.0.0'}
+  '@citation-js/plugin-bibjson@0.7.14':
+    resolution: {integrity: sha512-Hcmk01KrpHwcl5uVoLE6TRaJRFg7/qUvpJDcKqx3LLLCsNbaBlISfRDeFETrjjipTetkX70RvtS7FfGUN58gCQ==}
+    engines: {node: '>=16.0.0'}
     peerDependencies:
-      '@citation-js/core': ^0.6.0
+      '@citation-js/core': ^0.7.0
 
-  '@citation-js/plugin-bibtex@0.6.9':
-    resolution: {integrity: sha512-35xHut8rbDAN2ffYt+BPn+DChxXhbVnN86fu2DHDQNWlCqCrUJhQTMRMlD0L1uuyHTDrkTvgLPtcs14WC+xKzA==}
-    engines: {node: '>=14.0.0'}
+  '@citation-js/plugin-bibtex@0.7.16':
+    resolution: {integrity: sha512-Udeli19VAoFjOw0H1bB1KgmekRoW6XP5cdR3OQF5c2Mt1tZatXWcSQVdq+FeLKzodRocZXG5NFRvjyUZjVbV6A==}
+    engines: {node: '>=16.0.0'}
     peerDependencies:
-      '@citation-js/core': ^0.6.0
+      '@citation-js/core': ^0.7.0
 
-  '@citation-js/plugin-csl@0.6.9':
-    resolution: {integrity: sha512-W8AYDK5o6qgkdBWgXPXmpzbTUxyfoADDbiGf1BqMdeD0IH3kSmgvXcsyeh8NMxiaM6B5VDg0k0pHaaxbTm5POA==}
-    engines: {node: '>=14.0.0'}
+  '@citation-js/plugin-csl@0.7.14':
+    resolution: {integrity: sha512-7AKB8lMz1IqdtoE33NnWIpteLYMuSl3xqT+Cax7sQKwAIJEoq2HBmb43Ja8xQQ36nREAupQJv1V6XksIAmYnCg==}
+    engines: {node: '>=16.0.0'}
     peerDependencies:
-      '@citation-js/core': ^0.6.0
+      '@citation-js/core': ^0.7.0
 
   '@contentlayer/cli@0.3.4':
     resolution: {integrity: sha512-vNDwgLuhYNu+m70NZ3XK9kexKNguuxPXg7Yvzj3B34cEilQjjzSrcTY/i+AIQm9V7uT5GGshx9ukzPf+SmoszQ==}
@@ -2423,8 +2423,8 @@ packages:
     engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
     hasBin: true
 
-  cross-fetch@3.1.8:
-    resolution: {integrity: sha512-cvA+JwZoU0Xq+h6WkMvAUqPEYy92Obet6UdKLfW60qn99ftItKjB5T+BkyWOFWe2pUyfQ+IJHmpOTznqk1M6Kg==}
+  cross-fetch@4.0.0:
+    resolution: {integrity: sha512-e4a5N8lVvuLgAWgnCrLr2PP0YyDOTHa9H/Rj54dirp61qXnNq46m82bRhNqIA5VccJtWBvPTFRV3TtvHUKPB1g==}
 
   cross-spawn@7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
@@ -3209,6 +3209,9 @@ packages:
 
   hast-util-from-dom@4.2.0:
     resolution: {integrity: sha512-t1RJW/OpJbCAJQeKi3Qrj1cAOLA0+av/iPFori112+0X7R3wng+jxLA+kXec8K4szqPRGI8vPxbbpEYvvpwaeQ==}
+
+  hast-util-from-dom@5.0.0:
+    resolution: {integrity: sha512-d6235voAp/XR3Hh5uy7aGLbM3S4KamdW0WEgOaU1YoewnuYw4HXb5eRtv9g65m/RFGEfUY1Mw4UqCc5Y8L4Stg==}
 
   hast-util-from-html-isomorphic@1.0.0:
     resolution: {integrity: sha512-Yu480AKeOEN/+l5LA674a+7BmIvtDj24GvOt7MtQWuhzUwlaaRWdEPXAh3Qm5vhuthpAipFb2vTetKXWOjmTvw==}
@@ -4928,8 +4931,8 @@ packages:
   rehype-autolink-headings@6.1.0:
     resolution: {integrity: sha512-v8xnvhDtxc2jTgnhVlR2sG168TyNTK93Myx+uTzQNpNxzkRnQKz3hZQKoh7fxuOzJhCGa/z6qqZSPB2BOi/HRw==}
 
-  rehype-citation@1.0.2:
-    resolution: {integrity: sha512-FEvO2mOvUKeyj0FuN3ASNrerEqQkaBWFdrbRJLEsxho0Kfjhx905fjeOzjDFQ+8iL0wVgK/ml3x7vhgjOc7ITw==}
+  rehype-citation@2.2.1:
+    resolution: {integrity: sha512-8Ybq4W0/FeuXSwTrwpDbsZ9v0X0ZeKxDKyA/9s1EI2GMZLgaowPEkFOyXhOjv7Ud2ntK86AWkove38G4U0dRuQ==}
 
   rehype-katex@6.0.3:
     resolution: {integrity: sha512-ByZlRwRUcWegNbF70CVRm2h/7xy7jQ3R9LaY4VVSvjnoVWwWVhNL60DiZsBpC5tSzYQOCvDbzncIpIjPZWodZA==}
@@ -6790,7 +6793,7 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@citation-js/core@0.6.9':
+  '@citation-js/core@0.7.14':
     dependencies:
       '@citation-js/date': 0.5.1
       '@citation-js/name': 0.4.2
@@ -6803,22 +6806,22 @@ snapshots:
 
   '@citation-js/name@0.4.2': {}
 
-  '@citation-js/plugin-bibjson@0.6.9(@citation-js/core@0.6.9)':
+  '@citation-js/plugin-bibjson@0.7.14(@citation-js/core@0.7.14)':
     dependencies:
-      '@citation-js/core': 0.6.9
+      '@citation-js/core': 0.7.14
       '@citation-js/date': 0.5.1
       '@citation-js/name': 0.4.2
 
-  '@citation-js/plugin-bibtex@0.6.9(@citation-js/core@0.6.9)':
+  '@citation-js/plugin-bibtex@0.7.16(@citation-js/core@0.7.14)':
     dependencies:
-      '@citation-js/core': 0.6.9
+      '@citation-js/core': 0.7.14
       '@citation-js/date': 0.5.1
       '@citation-js/name': 0.4.2
       moo: 0.5.2
 
-  '@citation-js/plugin-csl@0.6.9(@citation-js/core@0.6.9)':
+  '@citation-js/plugin-csl@0.7.14(@citation-js/core@0.7.14)':
     dependencies:
-      '@citation-js/core': 0.6.9
+      '@citation-js/core': 0.7.14
       '@citation-js/date': 0.5.1
       citeproc: 2.4.63
 
@@ -8559,7 +8562,7 @@ snapshots:
     dependencies:
       cross-spawn: 7.0.3
 
-  cross-fetch@3.1.8:
+  cross-fetch@4.0.0:
     dependencies:
       node-fetch: 2.7.0
     transitivePeerDependencies:
@@ -9493,6 +9496,12 @@ snapshots:
   hast-util-from-dom@4.2.0:
     dependencies:
       hastscript: 7.2.0
+      web-namespaces: 2.0.1
+
+  hast-util-from-dom@5.0.0:
+    dependencies:
+      '@types/hast': 3.0.4
+      hastscript: 8.0.0
       web-namespaces: 2.0.1
 
   hast-util-from-html-isomorphic@1.0.0:
@@ -11884,21 +11893,22 @@ snapshots:
       unified: 10.1.2
       unist-util-visit: 4.1.0
 
-  rehype-citation@1.0.2:
+  rehype-citation@2.2.1:
     dependencies:
-      '@citation-js/core': 0.6.9
+      '@citation-js/core': 0.7.14
       '@citation-js/date': 0.5.1
       '@citation-js/name': 0.4.2
-      '@citation-js/plugin-bibjson': 0.6.9(@citation-js/core@0.6.9)
-      '@citation-js/plugin-bibtex': 0.6.9(@citation-js/core@0.6.9)
-      '@citation-js/plugin-csl': 0.6.9(@citation-js/core@0.6.9)
+      '@citation-js/plugin-bibjson': 0.7.14(@citation-js/core@0.7.14)
+      '@citation-js/plugin-bibtex': 0.7.16(@citation-js/core@0.7.14)
+      '@citation-js/plugin-csl': 0.7.14(@citation-js/core@0.7.14)
       citeproc: 2.4.63
-      cross-fetch: 3.1.8
-      hast-util-from-dom: 4.2.0
-      hast-util-from-parse5: 7.1.2
-      parse5: 6.0.1
-      unified: 10.1.2
-      unist-util-visit: 4.1.0
+      cross-fetch: 4.0.0
+      hast-util-from-dom: 5.0.0
+      hast-util-from-parse5: 8.0.1
+      js-yaml: 4.1.0
+      parse5: 7.1.2
+      unified: 11.0.5
+      unist-util-visit: 5.0.0
     transitivePeerDependencies:
       - encoding
 
