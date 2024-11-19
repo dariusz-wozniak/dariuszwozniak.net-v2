@@ -14,26 +14,8 @@ Source code of the personal blog.
 
 ## How to start?
 
-```bash
-pnpm install
-```
-
-For Windows, run:
-
-```powershell
-$env:PWD = $(Get-Location).Path
-```
-
-```bash
-pnpm dev
-```
-
-Run tests:
-
-```bash
-pnpm test
-```
-
-Debug:
-
-- Use `dev` configuration
+- Install: `pnpm install`
+  - For Windows, run additionally: `$env:PWD = $(Get-Location).Path`
+- Run: `dev`
+- Run tests: `pnpm test`
+- Debug: `dev`
