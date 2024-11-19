@@ -7,6 +7,8 @@ import tagData from '../app/tag-data.json' assert {type: 'json'}
 import {allBlogs} from '../.contentlayer/generated/index.mjs'
 import {sortPosts} from 'pliny/utils/contentlayer.js'
 
+const githubSlugger = new GithubSlugger()
+
 const generateRssItem = (config, post) => `
   <item>
     <guid>${config.siteUrl}/blog/${post.slug}</guid>
@@ -45,7 +47,7 @@ async function generateRSS(config, allBlogs, page = 'feed.xml') {
 
     if (publishPosts.length > 0) {
         for (const tag of Object.keys(tagData)) {
-            const filteredPosts = allBlogs.filter((post) => post.tags.map((t) => GithubSlugger.slug(t)).includes(tag)
+            const filteredPosts = allBlogs.filter((post) => post.tags.map((t) => githubSlugger.slug(t)).includes(tag)
             )
             const rss = generateRss(config, filteredPosts, `tags/${tag}/${page}`)
             const rssPath = path.join('public', 'tags', tag)
