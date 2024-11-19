@@ -49,4 +49,3 @@ yarn-error.log*
 .env
 
 /yarn.lock
-/pnpm-lock.yaml
