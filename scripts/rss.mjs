@@ -7,13 +7,15 @@ import tagData from '../app/tag-data.json' assert {type: 'json'}
 import {allBlogs} from '../.contentlayer/generated/index.mjs'
 import {sortPosts} from 'pliny/utils/contentlayer.js'
 
+const githubSlugger = new GithubSlugger()
+
 const generateRssItem = (config, post) => `
   <item>
     <guid>${config.siteUrl}/blog/${post.slug}</guid>
     <title>${escape(post.title)}</title>
     <link>${config.siteUrl}/blog/${post.slug}</link>
     ${post.summary && `<description>${escape(post.summary)}</description>`}
-    <pubDate>${new Date(post.date).toUTCString()}</pubDate>
+        <pubDate>${post.date ? new Date(post.date).toUTCString() : ''}</pubDate>
     <author>${config.author}</author>
     ${post.tags && post.tags.map((t) => `<category>${t}</category>`).join('')}
   </item>
@@ -28,7 +30,7 @@ const generateRss = (config, posts, page = 'feed.xml') => `
       <language>${config.language}</language>
       <managingEditor>${config.email}${config.author}</managingEditor>
       <webMaster>${config.email}${config.author}</webMaster>
-      <lastBuildDate>${new Date(posts[0].date).toUTCString()}</lastBuildDate>
+      <lastBuildDate>${posts[0]?.date ? new Date(posts[0].date).toUTCString() : ''}</lastBuildDate>
       <atom:link href="${config.siteUrl}/${page}" rel="self" type="application/rss+xml"/>
       ${posts.map((post) => generateRssItem(config, post)).join('')}
     </channel>
@@ -45,7 +47,7 @@ async function generateRSS(config, allBlogs, page = 'feed.xml') {
 
     if (publishPosts.length > 0) {
         for (const tag of Object.keys(tagData)) {
-            const filteredPosts = allBlogs.filter((post) => post.tags.map((t) => GithubSlugger.slug(t)).includes(tag)
+            const filteredPosts = allBlogs.filter((post) => post.tags.map((t) => githubSlugger.slug(t)).includes(tag)
             )
             const rss = generateRss(config, filteredPosts, `tags/${tag}/${page}`)
             const rssPath = path.join('public', 'tags', tag)
