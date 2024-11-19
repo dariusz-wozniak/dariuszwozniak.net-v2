@@ -16,8 +16,7 @@ var converterContext = (ConverterContext)FormatterServices
     .GetUninitializedObject(typeof(ConverterContext));
 ```
 
-...we can observe that `FormatterServices` is obsolete as per [SYSLIB0050: Formatter-based serialization is obsolete
-](https://learn.microsoft.com/en-us/dotnet/fundamentals/syslib-diagnostics/syslib0050). We can read that for .NET 5 and greater, we should use the method from `RuntimeHelpers`:
+...we can observe that `FormatterServices` is obsolete as per [SYSLIB0050: Formatter-based serialization is obsolete](https://learn.microsoft.com/en-us/dotnet/fundamentals/syslib-diagnostics/syslib0050). We can read that for .NET 5 and greater, we should use the method from `RuntimeHelpers`:
 
 ```csharp
 object obj = System.Runtime.CompilerServices.RuntimeHelpers
