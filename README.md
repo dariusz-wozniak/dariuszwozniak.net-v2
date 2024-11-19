@@ -2,31 +2,38 @@
 
 Source code of the personal blog.
 
-* Link: **[dariuszwozniak.net](https://dariuszwozniak.net/)**
-* Mirror: [dariuszwozniak-net-v2.vercel.app](https://dariuszwozniak-net-v2.vercel.app/)
-* Direct link to posts: https://github.com/dariusz-wozniak/dariuszwozniak.net-v2/tree/main/data/blog/
-* Used starter: [Tailwind Nextjs Starter Blog](https://github.com/timlrx/tailwind-nextjs-starter-blog)
+- Link: **[dariuszwozniak.net](https://dariuszwozniak.net/)**
+- Mirror: [dariuszwozniak-net-v2.vercel.app](https://dariuszwozniak-net-v2.vercel.app/)
+- Direct link to posts: https://github.com/dariusz-wozniak/dariuszwozniak.net-v2/tree/main/data/blog/
+- Used starter: [Tailwind Nextjs Starter Blog](https://github.com/timlrx/tailwind-nextjs-starter-blog)
 
 ## v1 (old version)
-* Repo: https://github.com/dariusz-wozniak/dariuszwozniak.net
-* Mirror: https://dariuszwozniak.netlify.app/
+
+- Repo: https://github.com/dariusz-wozniak/dariuszwozniak.net
+- Mirror: https://dariuszwozniak.netlify.app/
 
 ## How to start?
 
 ```bash
-yarn install
+pnpm install
+```
+
+For Windows, run:
+
+```powershell
+$env:PWD = $(Get-Location).Path
 ```
 
 ```bash
-yarn start
+pnpm dev
 ```
 
 Run tests:
 
 ```bash
-yarn test
+pnpm test
 ```
 
 Debug:
 
-* Use `dev` configuration
+- Use `dev` configuration

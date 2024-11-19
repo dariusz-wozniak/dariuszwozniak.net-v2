@@ -1,11 +1,19 @@
 name: Run Tests
-on: push
+on:
+  - push
+  - pull_request
+
 jobs:
-  build:
+  install:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
-      - name: Install modules
-        run: yarn install --no-immutable
+
+      - uses: pnpm/action-setup@v4
+        with:
+            version: 9.13.2
+            run_install: true
+
       - name: Run tests
-        run: yarn test
+        run: pnpm test
