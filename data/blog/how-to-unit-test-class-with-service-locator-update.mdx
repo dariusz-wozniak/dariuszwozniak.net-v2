@@ -4,7 +4,7 @@ date: '2024-11-19'
 draft: false
 thumbnail: '/static/images/blog/thumbs/unit_test_service_locator_update.png'
 tags: ['EPiServer', 'Optimizely', 'unit testing', 'dependency injection']
-summary: It's been a year since I wrote the article about unit testing with ServiceLocator. But, there are two things worth updating: replacing obsolete `FormatterServices` and use scoped service provider.
+summary: It has been a year since I wrote the article about unit testing with ServiceLocator. But, there are two things worth updating - replacing obsolete FormatterServices and use scoped service provider.
 ---
 
 It's been a year since I wrote the article about unit testing with ServiceLocator. But, there are two things worth updating: replacing obsolete `FormatterServices` and use scoped service provider.
@@ -12,14 +12,16 @@ It's been a year since I wrote the article about unit testing with ServiceLocato
 First of, in the line:
 
 ```csharp
-var converterContext = (ConverterContext)FormatterServices.GetUninitializedObject(typeof(ConverterContext));
+var converterContext = (ConverterContext)FormatterServices
+    .GetUninitializedObject(typeof(ConverterContext));
 ```
 
 ...we can observe that `FormatterServices` is obsolete as per [SYSLIB0050: Formatter-based serialization is obsolete
 ](https://learn.microsoft.com/en-us/dotnet/fundamentals/syslib-diagnostics/syslib0050). We can read that for .NET 5 and greater, we should use the method from `RuntimeHelpers`:
 
 ```csharp
-object obj = System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(typeToInstantiate);
+object obj = System.Runtime.CompilerServices.RuntimeHelpers
+    .GetUninitializedObject(typeToInstantiate);
 ```
 That's the first thing. The second one is that we can use the scoped service provider to create the instance of the class that we want to test. This is useful if we want to have a scope for the test context and we don't want to pollute the global service provider (in context of other tests).
 
