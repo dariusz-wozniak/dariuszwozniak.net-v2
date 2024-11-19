@@ -1,12 +1,1 @@
-{
-  "c-sharp": 7,
-  "locale": 2,
-  "performance": 1,
-  "episerver": 13,
-  "optimizely": 13,
-  "optiaddons": 1,
-  "rider": 2,
-  "unit-testing": 2,
-  "dependency-injection": 2,
-  "meta": 1
-}
+{"c-sharp":7,"locale":2,"performance":1,"episerver":13,"optimizely":13,"optiaddons":1,"rider":2,"unit-testing":2,"dependency-injection":2,"meta":1}
