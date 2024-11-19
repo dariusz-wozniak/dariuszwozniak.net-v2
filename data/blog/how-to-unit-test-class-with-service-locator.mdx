@@ -15,6 +15,10 @@ Some testing classes may have a dependency to the ServiceLocator, so the depende
 
 Note Optimizely uses Microsoft.Extensions.DependencyInjection, but the same approach can be used for other DI containers. Also, the scenario apply for non-Optimizely projects.
 
+Updates to the post:
+
+* 2024-11-19 - [How to write unit test for a class with dependency to ServiceLocator — update](/blog/how-to-unit-test-class-with-service-locator-update)
+
 ## The problem
 
 Let's consider an unit test of a class that contains property-injected service. In Optimizely, that would be, for example, `XhtmlPropertyModel` class:
@@ -84,7 +88,7 @@ private static IXhtmlStringPropertyService Sut()
     substituteForServiceLocator.GetService(typeof(IXhtmlStringPropertyRenderer))
                                .Returns(substituteForRenderer);
 
-    ServiceLocator.SetServiceProvider(substituteForServiceLocator);
+    ServiceLocator.SetScopedServiceProvider(substituteForServiceLocator);
 
     // Indirect assertion:
     ServiceLocator.Current.GetRequiredService<IXhtmlStringPropertyRenderer>()
@@ -104,7 +108,7 @@ public void just_a_simple_test()
 {
     IXhtmlStringPropertyService sut = Sut();
 
-    var converterContext = (ConverterContext)FormatterServices
+    var converterContext = (ConverterContext)System.Runtime.CompilerServices.RuntimeHelpers
         .GetUninitializedObject(typeof(ConverterContext));
 
     var something = sut.DoSomething(converterContext);
