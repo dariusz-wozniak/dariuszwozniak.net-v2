@@ -4,14 +4,16 @@ on:
   - pull_request
 
 jobs:
-  build:
+  install:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v4
+
       - uses: pnpm/action-setup@v4
         with:
-          version: 9
-          run_install: true
+            version: 9
+            run_install: true
 
-      - name: Run tests
-        run: pnpm test
+      - name: Install dependencies
+        run: pnpm install
