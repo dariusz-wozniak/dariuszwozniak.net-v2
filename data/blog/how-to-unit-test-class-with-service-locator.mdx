@@ -84,7 +84,7 @@ private static IXhtmlStringPropertyService Sut()
     substituteForServiceLocator.GetService(typeof(IXhtmlStringPropertyRenderer))
                                .Returns(substituteForRenderer);
 
-    ServiceLocator.SetServiceProvider(substituteForServiceLocator);
+    ServiceLocator.SetScopedServiceProvider(substituteForServiceLocator);
 
     // Indirect assertion:
     ServiceLocator.Current.GetRequiredService<IXhtmlStringPropertyRenderer>()
@@ -104,7 +104,7 @@ public void just_a_simple_test()
 {
     IXhtmlStringPropertyService sut = Sut();
 
-    var converterContext = (ConverterContext)FormatterServices
+    var converterContext = (ConverterContext)System.Runtime.CompilerServices.RuntimeHelpers
         .GetUninitializedObject(typeof(ConverterContext));
 
     var something = sut.DoSomething(converterContext);
