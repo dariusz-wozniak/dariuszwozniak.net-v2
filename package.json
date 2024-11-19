@@ -3,15 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "go": "start npm run start && start npm run dev",
     "start": "next dev",
     "dev": "cross-env INIT_CWD=$PWD next dev",
     "build": "cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
     "serve": "next start",
     "analyze": "cross-env ANALYZE=true next build",
     "lint": "next lint --fix --dir pages --dir app --dir components --dir lib --dir layouts --dir scripts",
-    "test": "jest --passWithNoTests",
-    "installWithTest": "pnpm install && pnpm test"
+    "prepare": "husky"
   },
   "dependencies": {
     "@next/bundle-analyzer": "13.5.6",
@@ -49,7 +47,6 @@
     "@svgr/webpack": "^8.1.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^15.0.7",
-    "@types/github-slugger": "^2.0.0",
     "@types/jest": "^29.5.14",
     "@types/mdx": "^2.0.13",
     "@types/react": "^18.3.12",
