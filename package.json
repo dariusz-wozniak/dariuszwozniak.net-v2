@@ -20,7 +20,7 @@
     "autoprefixer": "^10.4.20",
     "contentlayer2": "^0.5.3",
     "esbuild": "0.24.0",
-    "github-slugger": "1.5.0",
+    "github-slugger": "2.0.0",
     "gray-matter": "^4.0.3",
     "image-size": "1.1.1",
     "lint": "0.8.19",
