@@ -22,7 +22,7 @@
     "esbuild": "0.24.1",
     "github-slugger": "2.0.0",
     "gray-matter": "^4.0.3",
-    "image-size": "1.1.1",
+    "image-size": "1.2.0",
     "lint": "0.8.19",
     "next": "14.2.11",
     "next-contentlayer2": "^0.5.3",
