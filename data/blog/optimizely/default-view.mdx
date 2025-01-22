@@ -1,0 +1,71 @@
+---
+title: 'Optimizely / Episerver: How to use edit view as a default view?'
+date: '2025-01-22'
+draft: false
+thumbnail: '/static/images/blog/thumbs/edit-view.jpg'
+tags: ['EPiServer', 'Optimizely']
+summary: Optimizely uses preview on-edit view as a default. However, some may prefer edit view as a default. Here is how to do it via code.
+---
+
+Optimizely uses preview on-edit view as a default. However, some may prefer edit view as a default. Here is how to do it via code.
+
+In order to change the default view to edit view, you need to create a custom UI descriptor for the given type. Additionally, surround the class with the `UIDescriptorRegistration` attribute, so it will be automatically registered. For example:
+
+```csharp
+[UIDescriptorRegistration]
+public class CmsUiDescriptor : UIDescriptor<IContentData>
+{
+    public CmsUiDescriptor()
+    {
+        DefaultView = CmsViewNames.AllPropertiesView;
+        PublishView = CmsViewNames.AllPropertiesView;
+        CreateView = CmsViewNames.AllPropertiesView;
+    }
+}
+```
+
+You may specify your type for the view setting, e.g.:
+
+* `IContentData`: for CMS pages
+* `CatalogContentBase`: for Commerce catalog content
+* `BlockData`: for CMS blocks
+
+You can also narrow down the type to a specific type.
+
+For example, the Alloy MVC example uses it for the `ContainerPage` type ([link](https://github.com/episerver/alloy-mvc-template/blob/58a23bafa64d682adfaf41ceeaf2b13809981bc3/src/Alloy.Mvc.Template/Business/UIDescriptors/ContainerPageUIDescriptor.cs)):
+
+```csharp
+[UIDescriptorRegistration]
+public class ContainerPageUIDescriptor : UIDescriptor<ContainerPage>
+{
+    public ContainerPageUIDescriptor()
+        : base(ContentTypeCssClassNames.Container)
+    {
+        DefaultView = CmsViewNames.AllPropertiesView;
+    }
+}
+```
+
+# Behind the scenes and additional notes
+
+Please note the view properties are set according to the default view, publish view, and create view. You may set them to different views if needed.
+
+The `AllPropertiesView` is a `formedit` string and is passed to the frontend engine. If you need to use a different view, you may specify it as:
+
+* `OnPageEditView` (= `onpageedit`)
+* `PreviewView` (= `view`)
+
+See the `CmsViewNames` for all the options.
+
+Also, if you want to use the edit view for developers locally only, you may add `#if DEBUG` directive to the code. This way, the edit view will be used only in the debug mode.
+
+# Sticky mode
+
+There's also a *sticky view mode* which can be an alternative or addition to the default view.
+
+| “Sticky” means that, when navigating the content tree, the previously used view is loaded instead of the default view. This functionality is enabled for every content type by default.
+|
+| Whenever you change the view using the toggle button, the currently selected view is saved in the local storage and is used when you change the context.
+| https://world.optimizely.com/blogs/grzegorz-wiechec/dates/2017/9/sticky-view-mode/
+
+It can be set as a property `EnableStickyView` under UI descriptor.
