@@ -1,0 +1,68 @@
+---
+title: 'Using IUserImpersonation in Optimizely'
+date: '2025-04-08'
+tags: ['optimizely', 'episerver']
+thumbnail: '/static/images/blog/thumbs/userimpersonation.png'
+summary: >
+  Learn the correct way to execute code as a specific Optimizely user using IUserImpersonation.
+---
+
+A common need is to execute actions as a specific user, especially for tasks requiring permissions. When running code in Optimizely background tasks (like scheduled jobs), you often lose the user context available via `HttpContext.Current`, so in this case you need to use `IUserImpersonation`.
+
+Developers might have tried creating a principal manually:
+
+```csharp
+PrincipalInfo.CurrentPrincipal = new GenericPrincipal(
+    new GenericIdentity("SomeUser"),
+    new[] { "Administrators" }
+);
+```
+
+This approach often fails because Optimizely's security relies on specific providers. A manually created principal might lack the necessary roles or claims recognized by all Optimizely services (e.g., CMS vs. Commerce), leading to "Access Denied" errors, for example:
+
+> Access was denied to content 65469842123\_\_CatalogContent. The required access level was "Administrator"
+
+## The correct way: IUserImpersonation
+
+Optimizely provides `IUserImpersonation` functionality to create a principal correctly within its security context.
+
+```csharp
+public interface IUserImpersonation
+{
+  Task<IPrincipal> CreatePrincipalAsync(string userName);
+}
+```
+
+It does the following:
+
+> Create a principal based on a user name and add roles from the current EPiServer.Security.SecurityEntityProvider
+>
+> Remark: This is no validation done, if the user does not exist it will be created without roles.
+
+## How to Use It
+
+Inject `IUserImpersonation` and `IPrincipalAccessor` where needed (e.g., in your scheduled job class).
+
+```csharp
+// Inject services IUserImpersonation userImpersonation, IPrincipalAccessor principalAccessor
+
+// 1. Specify the username. Use an EXISTING user to ensure roles are loaded.
+string targetUsername = "newAdmin"; // Or another Optimizely user
+
+// 2. Create the principal
+var principal = await userImpersonation.CreatePrincipalAsync(targetUsername);
+
+// 3. Set it as the current principal for the scope
+principalAccessor.Principal = principal;
+
+// Now, code executed here runs as 'targetUsername'
+// Example: _contentRepository.Save(...)
+```
+
+**Key Points:**
+
+1.  **Username:** While the call works even for non-existent usernames, it will only assign roles if the user _exists_ in Optimizely. Use an existing user with the required permissions.
+2.  **Set Principal:** You _must_ set the `principalAccessor.Principal` property for the impersonation to take effect.
+3.  **Scope:** The impersonation applies within the scope where `principalAccessor.Principal` is set. Consider using `try...finally` to restore the original principal if necessary, although often not required for simple background jobs.
+
+By using `IUserImpersonation` and `IPrincipalAccessor`, you ensure that your code execute with the correct user context and permissions recognized by the entire Optimizely platform.

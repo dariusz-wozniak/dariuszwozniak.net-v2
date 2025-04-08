@@ -9,7 +9,7 @@
     "serve": "next start",
     "analyze": "cross-env ANALYZE=true next build",
     "lint": "next lint --fix --dir pages --dir app --dir components --dir lib --dir layouts --dir scripts",
-    "content": "contentlayer dev & next dev",
+    "content": "pnpm exec concurrently \"contentlayer2 dev\" \"next dev\"",
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
@@ -53,6 +53,7 @@
     "@types/react": "^18.3.13",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^6.21.0",
+    "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.1",
     "eslint-config-next": "15.1.6",
