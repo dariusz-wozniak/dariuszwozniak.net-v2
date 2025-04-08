@@ -16,6 +16,6 @@ Source code of the personal blog.
 
 - Install: `pnpm install`
   - For Windows, run additionally: `$env:PWD = $(Get-Location).Path`
-- Run: `dev`
+- Run: `content`
 - Run tests: `pnpm test`
 - Debug: `dev`
