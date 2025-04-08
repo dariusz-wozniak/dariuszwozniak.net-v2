@@ -1,10 +1,10 @@
 ---
-title: 'Using IUserImpersonation in Optimizely'
+title: 'Using user impersonation in Optimizely'
 date: '2025-04-08'
 tags: ['optimizely', 'episerver']
 thumbnail: '/static/images/blog/thumbs/userimpersonation.png'
 summary: >
-  Learn the correct way to execute code as a specific Optimizely user using IUserImpersonation.
+  Learn the correct way to execute code as a specific Optimizely user using user impersonation feature.
 ---
 
 A common need is to execute actions as a specific user, especially for tasks requiring permissions. When running code in Optimizely background tasks (like scheduled jobs), you often lose the user context available via `HttpContext.Current`, so in this case you need to use `IUserImpersonation`.
