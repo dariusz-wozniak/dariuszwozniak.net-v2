@@ -49,3 +49,8 @@ yarn-error.log*
 .env
 
 /yarn.lock
+
+# Cursor / IDE specific
+.cursor/
+.cursor-rules/
+.mdc
