@@ -48,6 +48,14 @@ module.exports = {
             code: {
               color: theme('colors.pink.500'),
             },
+            blockquote: {
+              'p:first-of-type::before': {
+                content: 'none',
+              },
+              'p:last-of-type::after': {
+                content: 'none',
+              },
+            },
           },
         },
         invert: {
