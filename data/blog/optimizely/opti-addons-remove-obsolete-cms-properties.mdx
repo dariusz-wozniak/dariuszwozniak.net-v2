@@ -1,0 +1,31 @@
+---
+title: 'Optimizely / Episerver: How to remove obsolete CMS data - automatically and manually'
+date: '2025-01-27'
+draft: false
+tags: ['EPiServer', 'Optimizely', 'Opti.Addons']
+thumbnail: '/static/images/blog/thumbs/optiaddons.jpg'
+summary: Optimizely does not remove non-code CMS properties by a default - This article describes how to remove obsolete CMS data and introduces yet another the Opti.Addons project.
+---
+
+Optimizely does not remove non-code CMS properties by a default: we can stay with the property or we may remove it via CMS back-office. There's also a way to remove them programmatically.
+
+# Automatically
+
+The automatic way is almost the same as described in the [How to remove obsolete Commerce data](https://dariuszwozniak.net/blog/optimizely/how-to-remove-obsolete-commerce-data) article. The Opti.Addons project contains a scheduled job that removes obsolete properties from the database. In order to use it, just install the NuGet package and see two scheduled jobs: one for the listing of properties that are not in the code (for verification before removal) and the second one for removing them. Link to the project: [Opti.Addons.DeleteMissingCmsPropertiesScheduledJob](https://github.com/Opti-Addons/Opti.Addons.DeleteMissingCmsPropertiesScheduledJob/blob/master/MissingCmsPropertiesService.cs).
+
+You may also check the source code and reuse it in your project. The main class is [MissingCmsPropertiesService.cs](
+
+# Manually
+
+In order to remove it manually, go to the CMS back-office → Settings → Content Types. Click on the Content Type and check the column "From code". If the property is not in the code, you can remove it by clicking the "Delete" button.
+
+<ArticleImage src={"/static/images/blog/optimizely/remove-cms-property.png"} alt={"How to remove non-code property from CMS"} />
+
+# Notes
+
+Things will be more complicated when the property has an actual references to other entities. In this case, you should also remove the references from the CMS. You can do that manually or by using custom code (e.g. with `IContentRepository.GetReferencesToContent` or `IContentModelUsage`).
+
+# Links
+
+* [Opti.Addons.DeleteMissingCmsPropertiesScheduledJob](https://github.com/Opti-Addons/Opti.Addons.DeleteMissingCmsPropertiesScheduledJob)
+* Blog post: [How to remove obsolete Commerce data](https://dariuszwozniak.net/blog/optimizely/how-to-remove-obsolete-commerce-data)
