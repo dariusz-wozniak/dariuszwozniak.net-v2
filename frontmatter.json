@@ -29,7 +29,7 @@
         },
         {
           "title": "Content preview",
-          "name": "preview",
+          "name": "thumbnail",
           "type": "image"
         },
         {
