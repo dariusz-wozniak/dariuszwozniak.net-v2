@@ -9,9 +9,7 @@ summary: >
 
 A common need is to execute actions as a specific user, especially for tasks requiring permissions. When running code in Optimizely background tasks (like scheduled jobs), you often lose the user context available via `HttpContext.Current`, so in this case you need to use `IUserImpersonation`.
 
-## The old (problematic) way
-
-Previously, developers might have tried creating a principal manually:
+Developers might have tried creating a principal manually:
 
 ```csharp
 PrincipalInfo.CurrentPrincipal = new GenericPrincipal(
