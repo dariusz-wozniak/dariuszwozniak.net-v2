@@ -34,17 +34,30 @@ export default function TagPage({ params }: { params: { tag: string } }) {
   const tag = decodeURI(params.tag)
   // Capitalize first letter and convert space to dash
   const title = tag[0].toUpperCase() + tag.split(' ').join('-').slice(1)
-  const filteredPosts = allCoreContent(
-    sortPosts(
-      allBlogs.filter(
-        (post) =>
-          post.tags &&
-          post.tags
-            .sort()
-            .map((t) => slug(t))
-            .includes(tag)
-      )
+
+  let sortedPosts = sortPosts(
+    allBlogs.filter(
+      (post) =>
+        post.tags &&
+        post.tags
+          .sort()
+          .map((t) => slug(t))
+          .includes(tag)
     )
   )
+
+  const isProduction = process.env.NODE_ENV === 'production'
+  if (isProduction) {
+    sortedPosts = sortedPosts.filter((post) => {
+      const postDate = new Date(post.date)
+      postDate.setHours(12, 0, 0, 0) // Ensure comparison is date-only
+      const today = new Date()
+      today.setHours(12, 0, 0, 0)
+      return postDate <= today
+    })
+  }
+
+  const filteredPosts = allCoreContent(sortedPosts)
+
   return <ListLayout posts={filteredPosts} title={title} />
 }

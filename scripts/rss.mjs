@@ -38,7 +38,17 @@ const generateRss = (config, posts, page = 'feed.xml') => `
 `
 
 async function generateRSS(config, allBlogs, page = 'feed.xml') {
-    const publishPosts = allBlogs.filter((post) => post.draft !== true)
+    let publishPosts = allBlogs.filter((post) => post.draft !== true)
+
+    // Filter out posts with future dates
+    const today = new Date()
+    today.setHours(12, 0, 0, 0) // Use midday for date comparison
+    publishPosts = publishPosts.filter((post) => {
+      const postDate = new Date(post.date)
+      postDate.setHours(12, 0, 0, 0)
+      return postDate <= today
+    })
+
     // RSS for blog post
     if (publishPosts.length > 0) {
         const rss = generateRss(config, sortPosts(publishPosts))
@@ -47,12 +57,25 @@ async function generateRSS(config, allBlogs, page = 'feed.xml') {
 
     if (publishPosts.length > 0) {
         for (const tag of Object.keys(tagData)) {
-            const filteredPosts = allBlogs.filter((post) => post.tags.map((t) => githubSlugger.slug(t)).includes(tag)
+            let filteredPosts = allBlogs.filter((post) =>
+                post.draft !== true && // Ensure draft posts are still excluded
+                post.tags &&
+                post.tags.map((t) => githubSlugger.slug(t)).includes(tag)
             )
-            const rss = generateRss(config, filteredPosts, `tags/${tag}/${page}`)
-            const rssPath = path.join('public', 'tags', tag)
-            mkdirSync(rssPath, {recursive: true})
-            writeFileSync(path.join(rssPath, page), rss)
+
+            // Also filter tag-specific posts by date
+            filteredPosts = filteredPosts.filter((post) => {
+              const postDate = new Date(post.date)
+              postDate.setHours(12, 0, 0, 0)
+              return postDate <= today
+            })
+
+            if (filteredPosts.length > 0) { // Only generate tag feed if there are posts
+              const rss = generateRss(config, sortPosts(filteredPosts), `tags/${tag}/${page}`)
+              const rssPath = path.join('public', 'tags', tag)
+              mkdirSync(rssPath, {recursive: true})
+              writeFileSync(path.join(rssPath, page), rss)
+            }
         }
     }
 }
