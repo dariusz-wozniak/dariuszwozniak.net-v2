@@ -1,0 +1,79 @@
+---
+title: "When was your Optimizely content indexed?"
+date: '2025-04-09'
+tags: ['Optimizely', 'Episerver']
+thumbnail: '/static/images/blog/thumbs/gettimestamp.png'
+draft: false
+summary: Unraveling the mystery behind the GetTimestamp property in Optimizely Search & Navigation (Find) and how it actually represents the indexing time, not content creation or modification time
+---
+
+When working with Optimizely Search & Navigation (formerly EPiServer Find), you'll often encounter various properties added to your indexed content. One such property is `GetTimestamp`. At first glance, you might assume this represents the creation or last modification date of your content item. However, the name can be a bit misleading!
+
+The `GetTimestamp` property doesn't reflect when the content itself was created or updated. Instead, it records the exact date and time when that specific content item was processed and added to the Search & Navigation index.
+
+Under the hood, in the Elasticsearch index used by Search & Navigation, this value is stored in a field like this:
+
+```json
+"GetTimestamp$$date": "2024-01-01T00:17:09.9595002Z",
+```
+
+You'll notice the 'Z' at the end of the timestamp (`2024-01-01T00:17:09.9595002Z`). This is part of the ISO 8601 date format and signifies **UTC (Coordinated Universal Time)**, also known as Zulu time. This ensures that indexing times are consistent regardless of the server's local time zone.
+
+## How is it generated?
+
+If you peek into the `EPiServer.Find.Cms` assembly (version 16.2.0.0 in this example), you'll find the extension method responsible for this:
+
+```csharp
+// Source: EPiServer.Find.Cms
+public static DateTime GetTimestamp(this IContent content)
+{
+  return DateTime.Now;
+}
+```
+
+Note that this method uses server's local time, not UTC.
+
+## Using `GetTimestamp` in queries
+
+`GetTimestamp` might be very useful for understanding your index activity and querying based on when content was last indexed. In fact, it can be used for technical-related queries for investigating indexing issues, reporting, etc.
+
+### Ordering
+
+You can sort search results based on when they were indexed:
+
+```csharp
+// Get the most recently indexed content first
+var resultsRecentFirst = client.Search<T>()
+    .OrderByDescending(x => x.GetTimestamp())
+    .GetResult();
+
+// Get the oldest indexed content first
+var resultsOldestFirst = client.Search<T>()
+    .OrderBy(x => x.GetTimestamp())
+    .GetResult();
+```
+
+### Filtering
+
+You can also filter content based on its indexing timestamp:
+
+```csharp
+// Find content indexed before yesterday
+var resultsBeforeYesterday = client.Search<T>()
+    .Filter(x => x.GetTimestamp().Before(DateTime.UtcNow.AddDays(-1)))
+    .GetResult();
+
+// Find content indexed after yesterday
+var resultsAfterYesterday = client.Search<T>()
+    .Filter(x => x.GetTimestamp().After(DateTime.UtcNow.AddDays(-1)))
+    .GetResult();
+
+// Find content indexed on a specific date (less common, requires exact match)
+var resultsOnSpecificDate = client.Search<T>()
+    .Filter(x => x.GetTimestamp().Match(new DateTime(2025, 1, 1)))
+    .GetResult();
+```
+
+Matching exact DateTime down to milliseconds is tricky. Range queries (Before/After) are usually more practical.
+
+So, `GetTimestamp` provides valuable insight into the indexing process itself. It tells you *when* the content hit the index, not when the content was authored or changed.
