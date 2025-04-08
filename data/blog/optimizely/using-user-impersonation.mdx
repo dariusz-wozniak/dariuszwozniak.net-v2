@@ -3,10 +3,11 @@ title: 'Using IUserImpersonation in Optimizely'
 date: '2025-04-08'
 tags: ['optimizely', 'episerver']
 thumbnail: '/static/images/blog/thumbs/userimpersonation.png'
-summary: 'Learn the correct way to execute code as a specific Optimizely user in background processes like scheduled jobs using IUserImpersonation and IPrincipalAccessor.'
+summary: >
+  Learn the correct way to execute code as a specific Optimizely user using IUserImpersonation.
 ---
 
-When running code in Optimizely background tasks (like scheduled jobs), you often lose the user context available via `HttpContext.Current`. A common need is to execute actions as a specific user, especially for tasks requiring permissions.
+A common need is to execute actions as a specific user, especially for tasks requiring permissions. When running code in Optimizely background tasks (like scheduled jobs), you often lose the user context available via `HttpContext.Current`, so in this case you need to use `IUserImpersonation`.
 
 ## The old (problematic) way
 
@@ -21,9 +22,9 @@ PrincipalInfo.CurrentPrincipal = new GenericPrincipal(
 
 This approach often fails because Optimizely's security relies on specific providers. A manually created principal might lack the necessary roles or claims recognized by all Optimizely services (e.g., CMS vs. Commerce), leading to "Access Denied" errors, for example:
 
-| Access was denied to content 65469842123\_\_CatalogContent. The required access level was "Administrator"
+> Access was denied to content 65469842123\_\_CatalogContent. The required access level was "Administrator"
 
-## The correct way: `IUserImpersonation`
+## The correct way: IUserImpersonation
 
 Optimizely provides `IUserImpersonation` functionality to create a principal correctly within its security context.
 
@@ -34,7 +35,11 @@ public interface IUserImpersonation
 }
 ```
 
-To make this principal active for your code, you may use `EPiServer.Security.IPrincipalAccessor`.
+It does the following:
+
+> Create a principal based on a user name and add roles from the current EPiServer.Security.SecurityEntityProvider
+>
+> Remark: This is no validation done, if the user does not exist it will be created without roles.
 
 ## How to Use It
 
@@ -62,4 +67,4 @@ principalAccessor.Principal = principal;
 2.  **Set Principal:** You _must_ set the `principalAccessor.Principal` property for the impersonation to take effect.
 3.  **Scope:** The impersonation applies within the scope where `principalAccessor.Principal` is set. Consider using `try...finally` to restore the original principal if necessary, although often not required for simple background jobs.
 
-By using `IUserImpersonation` and `IPrincipalAccessor`, you ensure that your background tasks execute with the correct user context and permissions recognized by the entire Optimizely platform.
+By using `IUserImpersonation` and `IPrincipalAccessor`, you ensure that your code execute with the correct user context and permissions recognized by the entire Optimizely platform.
