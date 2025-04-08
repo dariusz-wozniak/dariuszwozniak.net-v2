@@ -52,4 +52,4 @@ yarn-error.log*
 
 # Cursor / IDE specific
 .cursor-rules/
-project.mdc
+.mdc
