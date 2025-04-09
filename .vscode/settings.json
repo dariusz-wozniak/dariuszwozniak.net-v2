@@ -3,5 +3,5 @@
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "[markdown]": {
   },
-  "frontMatter.dashboard.openOnStart": true
+  "frontMatter.dashboard.openOnStart": false
 }
