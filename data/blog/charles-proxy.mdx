@@ -66,6 +66,24 @@ The request / response details along with other information (rq / rs headers are
 
 <ArticleImage src={"/static/images/blog/charles-results-details.png"} alt={"Details of the JSON request and the response"}/>
 
+## .NET Core
+
+If you are using .NET Core app, you may add the proxy settings to the `Startup.cs` file:
+
+```csharp
+services.AddHttpClient("ProxyClient", client =>
+{
+}).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+{
+    Proxy = new WebProxy("http://127.0.0.1:8888")
+    {
+        BypassProxyOnLocal = false,
+        UseDefaultCredentials = true
+    },
+    UseProxy = true
+});
+```
+
 ## Conclusion
 
 I'm using proxy tools very frequently to verify what's the hidden traffic for the 3rd party libs.

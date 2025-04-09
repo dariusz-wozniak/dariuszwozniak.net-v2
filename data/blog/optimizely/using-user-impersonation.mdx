@@ -59,10 +59,9 @@ principalAccessor.Principal = principal;
 // Example: _contentRepository.Save(...)
 ```
 
-**Key Points:**
 
-1.  **Username:** While the call works even for non-existent usernames, it will only assign roles if the user _exists_ in Optimizely. Use an existing user with the required permissions.
-2.  **Set Principal:** You _must_ set the `principalAccessor.Principal` property for the impersonation to take effect.
-3.  **Scope:** The impersonation applies within the scope where `principalAccessor.Principal` is set. Consider using `try...finally` to restore the original principal if necessary, although often not required for simple background jobs.
+1. **Username:** While the call works even for non-existent usernames, it will only assign roles if the user exists in Optimizely. Use an existing user with the required permissions.
+2. **Set Principal:** You _must_ set the `principalAccessor.Principal` property for the impersonation to take effect.
+3. **Scope:** The impersonation applies within the scope where `principalAccessor.Principal` is set. Consider using `try...finally` to restore the original principal if necessary, although often not required for simple background jobs.
 
 By using `IUserImpersonation` and `IPrincipalAccessor`, you ensure that your code execute with the correct user context and permissions recognized by the entire Optimizely platform.
