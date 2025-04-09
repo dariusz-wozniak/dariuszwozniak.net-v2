@@ -1,0 +1,75 @@
+---
+title: 'Optimizely: ValidationException: Media is not found. Navigate to Assets tab and remove it in order to publish; a.k.a. How to remove deleted media references?'
+date: '2025-04-10'
+tags: ['optimizely', 'episerver']
+thumbnail: '/static/images/blog/thumbs/validation-exception-media.png'
+draft: false
+summary: How to programmatically remove broken media references in Optimizely Commerce when encountering the Media is not found validation error during publishing
+---
+
+Working with content and media in Optimizely Commerce is usually straightforward. However, you might encounter a tricky situation: you add media files (e.g. images or documents stored in `CommerceMediaCollection`) to a piece of content (a product, variation, or node, basically the one that implements `IAssetContainer`), and later, that media item gets deleted directly from the Assets pane.
+
+The issue is that the reference to the deleted media remains attached to the content item. In the UI, this usually manifests as the following message when viewing the linked assets for that content:
+
+> Media not found
+
+While this might seem like just a UI glitch, it becomes a bigger problem when you try to save or publish the content programmatically using `IContentRepository`:
+
+```csharp
+_contentRepository.Save(content, SaveAction.Publish, AccessLevel.NoAccess);
+```
+
+Executing this line on content with a broken media reference will throw a `ValidationException`:
+
+> System.ComponentModel.DataAnnotations.ValidationException: Media is not found. Navigate to Assets tab and remove it in order to publish.
+
+The error message helpfully tells you what to do manually, but that's not practical if you need to fix this manually in bulk.
+
+## The solution: Unlinking the media references
+
+To fix this programmatically, we need to remove the invalid `CommerceMedia` reference from the content's `CommerceMediaCollection`. However, it's not as simple as just getting the content and calling `Remove()` on the collection.
+
+1.  Get a writable clone of the content item (`NodeContent` or `EntryContentBase`).
+2.  Get a writable clone of its `CommerceMediaCollection`.
+3.  Find and remove the specific `CommerceMedia` item referencing the deleted asset.
+4.  Save the modified content item.
+
+Here's a helper method that encapsulates this logic:
+
+```csharp
+// Convert the code (SKU) to a ContentReference
+ContentReference contentReference = _referenceConverter.GetContentLink(code);
+if (ContentReference.IsNullOrEmpty(contentReference)) return;
+
+IAssetContainer assetMediaContainer = null;
+
+if (_contentRepository.TryGet(contentReference, out NodeContent nodeContent))
+    assetMediaContainer = nodeContent.CreateWritableClone<NodeContent>();
+else if (_contentRepository.TryGet(contentReference, out EntryContentBase catalogEntry))
+    assetMediaContainer = catalogEntry.CreateWritableClone<EntryContentBase>();
+
+if (assetMediaContainer == null) return;
+
+var brokenMedia = assetMediaContainer.CommerceMediaCollection?
+                                     .Where(x => ContentReference.IsNullOrEmpty(x.AssetLink)).ToList();
+
+if (brokenMedia == null || !brokenMedia.Any()) return;
+
+// IMPORTANT: Create a writable clone of the media collection itself!
+// We didn't need to set a variable... and, that's the trick! 🧐
+assetMediaContainer.CommerceMediaCollection.CreateWritableClone();
+
+// Remove the broken media references
+foreach(var media in brokenMedia) assetMediaContainer.CommerceMediaCollection.Remove(media);
+
+// Save the changes back to the repository, casting the container to IContent
+_contentRepository.Save((IContent)assetMediaContainer, SaveAction.Publish, AccessLevel.NoAccess);
+```
+
+While the method above is useful for targeted fixes, if you suspect you have many instances of broken media links across your catalog, consider creating a scheduled job. This job could iterate through all relevant content types (of `IAssetContainer`), check their `CommerceMediaCollection` for assets that no longer exist, and use the logic above to clean them up automatically on a regular basis.
+
+This approach helps maintain data integrity over time without manual intervention or running one-off fixes.
+
+# Source
+
+* [MediaImporter.cs from Epinova.InRiverConnector](https://github.com/Epinova/Epinova.InRiverConnector/blob/7aada23b55fa19b2f1579f3db7f1168e6a21411e/src/EpiserverImporter/MediaImporter.cs) (available under MIT license)
