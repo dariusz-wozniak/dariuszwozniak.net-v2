@@ -29,3 +29,9 @@ input:-webkit-autofill:focus {
     background-color 600000s 0s,
     color 600000s 0s;
 }
+
+/* Custom override for prose blockquotes */
+.prose blockquote,
+.prose blockquote p {
+  font-style: normal;
+}
