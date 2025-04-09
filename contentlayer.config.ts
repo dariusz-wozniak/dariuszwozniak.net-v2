@@ -21,6 +21,9 @@ import rehypePrismPlus from 'rehype-prism-plus'
 import rehypePresetMinify from 'rehype-preset-minify'
 import siteMetadata from './data/siteMetadata'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer.js'
+import { visit } from 'unist-util-visit'
+import { h } from 'hastscript'
+import type { Element, Text } from 'hast'
 
 const root = process.cwd()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -72,6 +75,58 @@ function createSearchIndex(allBlogs) {
       JSON.stringify(allCoreContent(sortPosts(allBlogs)))
     )
     console.log('Local search index generated...')
+  }
+}
+
+// Custom plugin to make bibliography URLs clickable (Corrected Version)
+const rehypeLinkifyBibUrls = () => {
+  return (tree) => {
+    visit(tree, 'element', (node: Element) => {
+      // Target bibliography entry divs
+      const className = node.properties?.className
+      const isCslEntry = 
+        (typeof className === 'string' && className.includes('csl-entry')) ||
+        (Array.isArray(className) && className.some(cn => typeof cn === 'string' && cn.includes('csl-entry')))
+
+      if (node.tagName === 'div' && isCslEntry) {
+        const urlRegex = /(https?:\/\/[^\s{}]+)/g
+        const newChildren: (Element | Text)[] = []
+
+        node.children.forEach((child) => {
+          if (child.type === 'text') {
+            let lastIndex = 0
+            let match
+            urlRegex.lastIndex = 0
+
+            while ((match = urlRegex.exec(child.value)) !== null) {
+              // Add text before the match
+              if (match.index > lastIndex) {
+                newChildren.push({ type: 'text', value: child.value.slice(lastIndex, match.index) })
+              }
+              // Add the link using hastscript
+              const url = match[0]
+              // Ensure the result of h() is treated as Element
+              newChildren.push(
+                h('a', { href: url, target: '_blank', rel: 'noopener noreferrer' }, url) as Element
+              )
+              lastIndex = match.index + url.length
+            }
+
+            // Add any remaining text after the last match
+            if (lastIndex < child.value.length) {
+              newChildren.push({ type: 'text', value: child.value.slice(lastIndex) })
+            }
+          } else {
+            // Keep other non-text nodes (like existing links, italics, etc.)
+            // Ensure the child is correctly typed when pushed
+            newChildren.push(child as Element | Text)
+          }
+        })
+
+        // Replace the original children with the new list containing links
+        node.children = newChildren
+      }
+    })
   }
 }
 
@@ -146,6 +201,7 @@ export default makeSource({
       rehypeAutolinkHeadings,
       rehypeKatex,
       [rehypeCitation, { path: path.join(root, 'data', 'blog'), linkCitations: true }],
+      rehypeLinkifyBibUrls,
       [rehypePrismPlus, { defaultLanguage: 'js', ignoreMissing: true }],
       rehypePresetMinify,
     ],

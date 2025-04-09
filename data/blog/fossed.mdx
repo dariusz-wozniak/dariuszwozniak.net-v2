@@ -1,0 +1,66 @@
+---
+title: "Introducing FOSSED: Navigating .NET Library Licensing Changes"
+date: 2025-04-10
+tags: ['C-Sharp', 'side-project']
+thumbnail: '/static/images/blog/thumbs/fossed.png'
+draft: false
+summary: Recent shifts in the .NET ecosystem have seen several popular libraries move towards commercial licenses. I created FOSSED, a resource hub to help developers understand these changes and find free, open-source alternatives
+---
+
+The .NET open-source landscape has seen some significant shifts recently. Several popular and widely-used libraries have announced transitions towards commercial licensing models. This has left many developers and organizations needing to evaluate their dependencies, understand the new terms, and decide whether to purchase licenses, stick with older versions, or migrate to alternatives.
+
+To help navigate this changing environment, I created **[FOSSED](https://dariusz-wozniak.github.io/fossed/)**, a website dedicated to providing clarity on these licensing changes and highlighting free, open-source software (FOSS) alternatives.
+
+<ArticleImage src={"/static/images/blog/fossed-screen.png"} alt={"Site screenshot"}/>
+
+## Why FOSSED?
+
+Keeping track of which libraries are changing, what the new terms are, and what viable alternatives exist can be time-consuming. FOSSED aims to be a central resource for .NET developers facing these challenges. It gathers information about affected libraries, explains the context behind the changes, and lists potential FOSS alternatives to consider.
+
+## Key Libraries and Their Alternatives
+
+Here's a brief summary of the situations covered on FOSSED for some prominent libraries:
+
+### Moq
+
+*   **Change:** Introduced `SponsorLink` in v4.20.0 (later removed in v4.20.2) which collected hashed developer emails, causing significant privacy backlash.
+*   **Alternatives:** [NSubstitute](https://nsubstitute.github.io/), [FakeItEasy](https://fakeiteasy.github.io/)
+*   **Mitigation:** Pin Moq version to < 4.20.0 (e.g., 4.18.4).
+
+### FluentAssertions
+
+*   **Change:** Version 8.0+ moved to a commercial license (Xceed Community License Agreement) requiring payment for commercial use.
+*   **Alternatives:** [Shouldly](https://github.com/shouldly/shouldly), built-in test framework assertions (MSTest, NUnit, xUnit).
+*   **Mitigation:** Pin FluentAssertions version to 7.x (remains Apache 2.0).
+
+### AutoMapper
+
+*   **Change:** Creator Jimmy Bogard announced it will be transitioning to a commercial model to ensure sustainability. Specifics are yet to be determined.
+*   **Alternatives:** [Mapperly](https://github.com/riok/mapperly) (Source Generator), manual mapping.
+
+### MediatR
+
+*   **Change:** Also being commercialized by Jimmy Bogard alongside AutoMapper for sustainability reasons. Details are pending.
+*   **Alternatives:** [Mediator](https://github.com/martinothamar/Mediator) (Source Generator), [Brighter](https://github.com/BrighterCommand/Brighter).
+
+### MassTransit
+
+*   **Change:** Version 9 will adopt a commercial license. Pricing and exact terms are still being finalized.
+*   **Alternatives (beyond v8):** [NServiceBus](https://particular.net/nservicebus) (Commercial), [Rebus](https://github.com/rebus-org/Rebus) (MIT), [Brighter](https://github.com/BrighterCommand/Brighter) (MIT), [Wolverine](https://wolverine.netlify.app/) (MIT).
+*   **Mitigation:** Continue using MassTransit v8 (Apache 2.0, supported until at least end of 2026).
+
+### ImageSharp
+
+*   **Change:** Uses the "Six Labors Split License" (SLSL). Free under Apache 2.0 for OSS, non-profits, small companies (< $1M annual revenue), and transitive use. Requires a paid license otherwise.
+*   **Alternatives:** [SkiaSharp](https://github.com/mono/SkiaSharp) (MIT), [Magick.NET](https://github.com/dlemstra/Magick.NET) (Apache 2.0). (System.Drawing.Common is generally not recommended for cross-platform use).
+*   **Mitigation:** Verify if your usage fits the Apache 2.0 conditions of the SLSL.
+
+## Stay Informed
+
+The .NET ecosystem is constantly evolving, and licensing is becoming an increasingly important consideration. FOSSED aims to keep developers informed about these changes.
+
+Check out the site for more details, background information, and links to official announcements and community discussions:
+
+**[Visit FOSSED ->](https://dariusz-wozniak.github.io/fossed/)**
+
+Feedback and contributions to the FOSSED project are welcome via its [GitHub repository](https://github.com/dariusz-wozniak/fossed). Let's navigate these changes together!
