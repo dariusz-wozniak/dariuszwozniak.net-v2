@@ -1,6 +1,7 @@
 import ListLayout from '@/layouts/ListLayoutWithTags'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import { allBlogs } from 'contentlayer/generated'
+import { SCHEDULED_POST_PUBLISH_HOUR } from 'app/config'
 
 const POSTS_PER_PAGE = 10
 
@@ -18,9 +19,9 @@ export default function Page({ params }: { params: { page: string } }) {
   const filteredPosts = isProduction
     ? posts.filter((post) => {
         const postDate = new Date(post.date)
-        postDate.setHours(12, 0, 0, 0) // Ensure comparison is date-only, not time-sensitive
+        postDate.setHours(SCHEDULED_POST_PUBLISH_HOUR, 0, 0, 0) // Ensure comparison is date-only, not time-sensitive
         const today = new Date()
-        today.setHours(12, 0, 0, 0)
+        today.setHours(SCHEDULED_POST_PUBLISH_HOUR, 0, 0, 0)
         return postDate <= today
       })
     : posts

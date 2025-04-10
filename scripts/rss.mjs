@@ -7,6 +7,9 @@ import tagData from '../app/tag-data.json' assert {type: 'json'}
 import {allBlogs} from '../.contentlayer/generated/index.mjs'
 import {sortPosts} from 'pliny/utils/contentlayer.js'
 
+// Import the configuration
+const { SCHEDULED_POST_PUBLISH_HOUR } = await import('../app/config.js')
+
 const githubSlugger = new GithubSlugger()
 
 const generateRssItem = (config, post) => `
@@ -42,10 +45,10 @@ async function generateRSS(config, allBlogs, page = 'feed.xml') {
 
     // Filter out posts with future dates
     const today = new Date()
-    today.setHours(12, 0, 0, 0) // Use midday for date comparison
+    today.setHours(SCHEDULED_POST_PUBLISH_HOUR, 0, 0, 0) // Use configured UTC time for date comparison
     publishPosts = publishPosts.filter((post) => {
       const postDate = new Date(post.date)
-      postDate.setHours(12, 0, 0, 0)
+      postDate.setHours(SCHEDULED_POST_PUBLISH_HOUR, 0, 0, 0)
       return postDate <= today
     })
 
@@ -66,7 +69,7 @@ async function generateRSS(config, allBlogs, page = 'feed.xml') {
             // Also filter tag-specific posts by date
             filteredPosts = filteredPosts.filter((post) => {
               const postDate = new Date(post.date)
-              postDate.setHours(12, 0, 0, 0)
+              postDate.setHours(SCHEDULED_POST_PUBLISH_HOUR, 0, 0, 0)
               return postDate <= today
             })
 
