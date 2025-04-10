@@ -1,12 +1,11 @@
 import { SCHEDULED_POST_PUBLISH_HOUR } from './config';
 import type { Blog } from 'contentlayer/generated'
-import { CoreContent } from 'pliny/utils/contentlayer'
 
 /**
  * Filters posts based on publication date compared to current date
  * Uses the configured publication hour (SCHEDULED_POST_PUBLISH_HOUR)
  */
-export function filterPostsByPublishDate(posts: CoreContent<Blog>[]) {
+export function filterPostsByPublishDate(posts: Blog[]) {
   const isProduction = process.env.NODE_ENV === 'production';
   
   if (!isProduction) {

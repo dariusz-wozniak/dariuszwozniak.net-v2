@@ -13,8 +13,9 @@ export const generateStaticParams = async () => {
 }
 
 export default function Page({ params }: { params: { page: string } }) {
-  const posts = allCoreContent(sortPosts(allBlogs))
-  const filteredPosts = filterPostsByPublishDate(posts)
+  let posts = sortPosts(allBlogs)
+  posts = filterPostsByPublishDate(posts)
+  const filteredPosts = allCoreContent(posts)
 
   const pageNumber = parseInt(params.page as string)
   const initialDisplayPosts = filteredPosts.slice(
