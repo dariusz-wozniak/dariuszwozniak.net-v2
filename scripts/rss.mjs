@@ -7,8 +7,8 @@ import tagData from '../app/tag-data.json' assert {type: 'json'}
 import {allBlogs} from '../.contentlayer/generated/index.mjs'
 import {sortPosts} from 'pliny/utils/contentlayer.js'
 
-// Import the configuration
-const { SCHEDULED_POST_PUBLISH_HOUR } = await import('../app/config.js')
+// Define the constant here to avoid importing from TypeScript
+const SCHEDULED_POST_PUBLISH_HOUR = 7 // 7 AM UTC
 
 const githubSlugger = new GithubSlugger()
 
