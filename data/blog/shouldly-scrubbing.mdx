@@ -1,0 +1,138 @@
+---
+title: 'Advanced Scrubbing with Shouldly for Approval Testing'
+date: '2024-09-15'
+draft: false
+thumbnail: '/static/images/blog/thumbs/shouldly_scrubber.png'
+tags: ['C-Sharp', 'testing', 'Shouldly', 'approval testing']
+summary: Shouldly's ShouldMatchApproved() provides a powerful approval testing mechanism that includes scrubbing capabilities to handle dynamic content in your test assertions. This post explores how to leverage scrubbers effectively, including a custom JSON scrubber implementation.
+---
+
+Approval testing is a powerful technique that helps verify complex outputs by comparing them against approved reference files. Shouldly's implementation of the technique can be done via `ShouldMatchApproved()`. But, there are some cases where the actual values retrieved are dynamic / not deterministic, such as timestamps, GUIDs, or other values that change between test runs. In this case, we can use the `WithScrubber` option to scrub the dynamic values before comparison.
+
+## Introduction to scrubbing
+
+Scrubbing allows you to transform the received data before comparison, effectively removing or replacing dynamic elements with placeholder values. This ensures your tests remain deterministic even when the underlying data contains variable content.
+
+### Basic scrubbing with regex
+
+The simplest way to implement scrubbing is with the `WithScrubber` option and a regular expression:
+
+```csharp
+string responseWithTimestamp = @"{ ""result"": ""success"", ""timestamp"": ""2024-09-15T14:30:22Z"" }";
+
+responseWithTimestamp.ShouldMatchApproved(c => 
+    c.WithScrubber(s => Regex.Replace(s, @"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", "&lt;timestamp&gt;")));
+```
+
+In this example, any ISO-8601 formatted timestamps will be replaced with `&lt;timestamp&gt;` in the received file before comparison with the approved file.
+
+
+### Scrubbing JSON properties
+
+While regular expressions work well for simple patterns, they can become unwieldy when working with structured data like JSON. The following custom extension method provides a more elegant approach to scrubbing specific properties from JSON objects:
+
+```csharp
+public static string Scrub(this string s, params string[] propertiesToScrub)
+{
+    var jsonObject = JObject.Parse(s);
+    ScrubToken(jsonObject);
+    return jsonObject.ToString();
+
+    void ScrubToken(JToken token)
+    {
+        if (token.Type == JTokenType.Object)
+        {
+            foreach (var property in token.Children<JProperty>())
+            {
+                if (propertiesToScrub.Contains(property.Name))
+                {
+                    property.Value.Replace("&lt;scrubbed&gt;");
+                }
+                else
+                {
+                    ScrubToken(property.Value);
+                }
+            }
+        }
+        else if (token.Type == JTokenType.Array)
+        {
+            foreach (var item in token.Children())
+            {
+                ScrubToken(item);
+            }
+        }
+    }
+}
+```
+
+This implementation recursively traverses a JSON object, replacing the values of specified properties with a placeholder. It handles nested objects and arrays gracefully.
+
+Using this custom scrubber is straightforward:
+
+```csharp
+string userJson = @"{
+    ""id"": ""a1b2c3d4-e5f6-7890-abcd-ef1234567890"",
+    ""name"": ""John Doe"",
+    ""createdAt"": ""2024-09-15T10:30:00Z"",
+    ""settings"": {
+        ""theme"": ""dark"",
+        ""notifications"": {
+            ""id"": 12345,
+            ""enabled"": true
+        }
+    },
+    ""recentItems"": [
+        { ""id"": 1, ""name"": ""Item 1"" },
+        { ""id"": 2, ""name"": ""Item 2"" }
+    ]
+}";
+
+// Scrub all "id" and "createdAt" properties throughout the JSON
+userJson.ShouldMatchApproved(c => c.WithScrubber(s => s.Scrub("id", "createdAt")));
+```
+
+This will produce a scrubbed version where every occurrence of the "id" and "createdAt" properties (regardless of nesting level) is replaced with "&lt;scrubbed&gt;":
+
+```json
+{
+  "id": "&lt;scrubbed&gt;",
+  "name": "John Doe",
+  "createdAt": "&lt;scrubbed&gt;",
+  "settings": {
+    "theme": "dark",
+    "notifications": {
+      "id": "&lt;scrubbed&gt;",
+      "enabled": true
+    }
+  },
+  "recentItems": [
+    {
+      "id": "&lt;scrubbed&gt;",
+      "name": "Item 1"
+    },
+    {
+      "id": "&lt;scrubbed&gt;",
+      "name": "Item 2"
+    }
+  ]
+}
+```
+
+## Real-World usage examples
+
+Scrubbing becomes particularly valuable in several testing scenarios:
+
+1. API responses
+2. Database record comparison
+3. Log file verification
+4. Complex object serialization
+
+## Conclusion
+
+Shouldly's scrubbing capabilities provide a powerful way to make approval tests more reliable by eliminating the variability caused by dynamic content. While the built-in regex-based scrubbing works well for simple cases, implementing a custom JSON scrubber gives you more flexibility and control when dealing with complex structured data.
+
+By combining Shouldly's intuitive assertion syntax with effective scrubbing techniques, you can create robust approval tests that verify your application's behavior without being affected by non-deterministic elements.
+
+## Links
+- [Shouldly Documentation: WithScrubber](https://docs.shouldly.org/documentation/equality/matchapproved#withscrubber)
+- [Approval Testing](https://approvaltests.com/)
