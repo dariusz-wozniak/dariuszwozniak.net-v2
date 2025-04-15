@@ -21,6 +21,7 @@ const siteMetadata = {
   goodReads: 'https://www.goodreads.com/author/show/18135947.Dariusz_Wo_niak',
   stackOverflow: 'https://stackoverflow.com/users/297823/dariusz-wo%C5%BAniak',
   stackExchange: 'https://stackexchange.com/users/112989/dariusz-wo%c5%baniak?tab=accounts',
+  kofi: 'https://ko-fi.com/dariuszwozniak',
   locale: 'en-US',
   analytics: {
     // If you want to use an analytics provider you have to add it to the

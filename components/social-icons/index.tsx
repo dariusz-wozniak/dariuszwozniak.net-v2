@@ -10,6 +10,7 @@ import {
   GoodReads,
   StackOverflow,
   StackExchange,
+  KoFi,
 } from './icons'
 
 const components = {
@@ -24,6 +25,7 @@ const components = {
   goodReads: GoodReads,
   stackOverflow: StackOverflow,
   stackExchange: StackExchange,
+  kofi: KoFi,
 }
 
 type SocialIconProps = {
