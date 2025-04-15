@@ -21,10 +21,10 @@ The simplest way to implement scrubbing is with the `WithScrubber` option and a 
 string responseWithTimestamp = @"{ ""result"": ""success"", ""timestamp"": ""2024-09-15T14:30:22Z"" }";
 
 responseWithTimestamp.ShouldMatchApproved(c => 
-    c.WithScrubber(s => Regex.Replace(s, @"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", "&lt;timestamp&gt;")));
+    c.WithScrubber(s => Regex.Replace(s, @"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", "<timestamp>")));
 ```
 
-In this example, any ISO-8601 formatted timestamps will be replaced with `&lt;timestamp&gt;` in the received file before comparison with the approved file.
+In this example, any ISO-8601 formatted timestamps will be replaced with `<timestamp>` in the received file before comparison with the approved file.
 
 
 ### Scrubbing JSON properties
@@ -46,7 +46,7 @@ public static string Scrub(this string s, params string[] propertiesToScrub)
             {
                 if (propertiesToScrub.Contains(property.Name))
                 {
-                    property.Value.Replace("&lt;scrubbed&gt;");
+                    property.Value.Replace("<scrubbed>");
                 }
                 else
                 {
@@ -90,34 +90,34 @@ string userJson = @"{
 userJson.ShouldMatchApproved(c => c.WithScrubber(s => s.Scrub("id", "createdAt")));
 ```
 
-This will produce a scrubbed version where every occurrence of the "id" and "createdAt" properties (regardless of nesting level) is replaced with "&lt;scrubbed&gt;":
+This will produce a scrubbed version where every occurrence of the "id" and "createdAt" properties (regardless of nesting level) is replaced with `<scrubbed>`:
 
 ```json
 {
-  "id": "&lt;scrubbed&gt;",
+  "id": "<scrubbed>",
   "name": "John Doe",
-  "createdAt": "&lt;scrubbed&gt;",
+  "createdAt": "<scrubbed>",
   "settings": {
     "theme": "dark",
     "notifications": {
-      "id": "&lt;scrubbed&gt;",
+      "id": "<scrubbed>",
       "enabled": true
     }
   },
   "recentItems": [
     {
-      "id": "&lt;scrubbed&gt;",
+      "id": "<scrubbed>",
       "name": "Item 1"
     },
     {
-      "id": "&lt;scrubbed&gt;",
+      "id": "<scrubbed>",
       "name": "Item 2"
     }
   ]
 }
 ```
 
-## Real-World usage examples
+## Real-world usage examples
 
 Scrubbing becomes particularly valuable in several testing scenarios:
 
