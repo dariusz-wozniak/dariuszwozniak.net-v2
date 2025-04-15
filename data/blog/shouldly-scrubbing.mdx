@@ -1,6 +1,6 @@
 ---
 title: 'Advanced Scrubbing with Shouldly for Approval Testing'
-date: '2024-09-15'
+date: '2025-09-14'
 draft: false
 thumbnail: '/static/images/blog/thumbs/shouldly_scrubber.png'
 tags: ['C-Sharp', 'testing', 'Shouldly', 'approval testing']
@@ -87,7 +87,6 @@ string userJson = @"{
     ]
 }";
 
-// Scrub all "id" and "createdAt" properties throughout the JSON
 userJson.ShouldMatchApproved(c => c.WithScrubber(s => s.Scrub("id", "createdAt")));
 ```
 
