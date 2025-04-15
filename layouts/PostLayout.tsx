@@ -80,7 +80,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
             <div className="divide-y divide-gray-200 xl:col-span-3 xl:row-span-2 xl:pb-0 dark:divide-gray-700">
               <div className="prose max-w-none pb-8 pt-10 dark:prose-invert">{children}</div>
               <div className="pb-6 pt-6 text-m text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg relative overflow-hidden">
-                <div className="absolute right-2 top-1/2 -translate-y-1/2 text-6xl opacity-10 transform rotate-12 pointer-events-none">✨</div>
+                <div className="absolute right-2 top-1/2 -translate-y-1/2 text-6xl opacity-10 pointer-events-none">☕</div>
                 <p className="flex items-center relative z-10">
                   <span role="img" aria-label="Coffee" className="mr-2">☕</span>
                   Did you like the article? <Link href="https://ko-fi.com/dariuszwozniak" className="ml-1 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">Support me on Ko-Fi!</Link>
