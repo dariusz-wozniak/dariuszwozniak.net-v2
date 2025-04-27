@@ -1,0 +1,67 @@
+---
+title: 'How to disable Optimizely Find indexing during large imports'
+date: '2025-04-27'
+draft: false
+thumbnail: '/static/images/blog/thumbs/find_indexing.png'
+tags: ['EPiServer', 'Optimizely']
+summary: When importing large amounts of data to Optimizely Commerce, automatic indexing can cause performance issues. Learn how to temporarily disable Find indexing during import jobs.
+---
+
+When importing large amounts of data to Optimizely Commerce, the automatic indexing performed by Optimizely Find can cause performance issues and even deadlocks. This article shows how to temporarily disable indexing during import operations and reindex the content afterwards.
+
+## The Problem
+
+During scheduled import jobs that bring external PIM data into Optimizely Commerce, the system often has to process large volumes of content. Simultaneously, Optimizely Find automatically attempts to index this content as it changes. This concurrent operation can lead to performance degradation.
+
+## The Solution
+
+You can temporarily disable automatic indexing from code during the execution of your import job:
+
+```csharp
+EventedIndexingSettings.Instance.EventedIndexingEnabled = false;
+EventedIndexingSettings.Instance.ScheduledPageQueueEnabled = false;
+
+try
+{
+    // Run your import process
+    // ...
+}
+finally
+{
+    // Re-enable indexing
+    EventedIndexingSettings.Instance.EventedIndexingEnabled = true;
+    EventedIndexingSettings.Instance.ScheduledPageQueueEnabled = true;
+}
+```
+
+After that, you can run the "Search & Navigation Content Indexing Job" from the admin interface, so it will process all the content items.
+
+You can also batch the indexed content to be indexed (so you don't have to index everything at once):
+
+```csharp
+// Disable all evented indexing
+EventedIndexingSettings.Instance.EventedIndexingEnabled = false;
+EventedIndexingSettings.Instance.ScheduledPageQueueEnabled = false;
+
+try
+{
+    // Run your import process
+    // ...
+    
+    // Manually index the imported items
+    // ⚠️ Remember to batch your indexing operations
+    await client.IndexAsync(objectsToIndex);
+}
+finally
+{
+    // Re-enable indexing
+    EventedIndexingSettings.Instance.EventedIndexingEnabled = true;
+    EventedIndexingSettings.Instance.ScheduledPageQueueEnabled = true;
+}
+```
+
+Here, batching helps prevent memory issues and improves overall performance when dealing with large datasets. For batching, you can use the `Chunk` or MoreLINQ's `Batch` method.
+
+## Conclusion
+
+Temporarily disabling Optimizely Find's automatic indexing during large import operations can significantly improve performance. Just remember to either manually index your content in batches while indexing is disabled, or let the scheduled job handle it after re-enabling the indexing queue.
