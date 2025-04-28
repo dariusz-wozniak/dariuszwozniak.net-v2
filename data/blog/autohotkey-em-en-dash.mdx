@@ -1,0 +1,43 @@
+---
+title: 'Typing Em and En dashes with AutoHotkey'
+date: '2025-04-28'
+tags: ['autohotkey', 'automation', 'productivity']
+draft: false
+thumbnail: '/static/images/blog/thumbs/autohotkey-em-en-dash.png'
+summary: Learn how to quickly type em and en dashes on Windows using a simple AutoHotkey script
+---
+
+Typing special characters like the em dash (—) and en dash (–) can be a bit clunky on standard keyboards. You often have to remember specific Alt codes or rely on software auto-correction. I'm using simple shortcuts in the AutoHotkey script to map the en dash and em dash to the number pad.
+
+## What are Em and En dashes?
+
+Before we dive into the script, let's quickly recap what these dashes are for:
+
+*   **En Dash (–):** Slightly wider than a hyphen, it's primarily used to indicate ranges (e.g., "pages 10–15", "Monday–Friday") or connections.
+*   **Em Dash (—):** The width of the letter 'M', it's often used to indicate a pause or break in thought—much like this—or to set off parenthetical statements.
+
+## AutoHotkey to the Rescue
+
+[AutoHotkey](https://www.autohotkey.com/) is a fantastic free scripting language for Windows that allows you to automate tasks, remap keys, and create custom shortcuts.
+
+Here's a simple script I use to map the en dash and em dash to convenient shortcuts using the number pad:
+
+```autohotkey
+; En dash: Alt + Numpad Minus
+!NumpadSub::
+Send, {ASC 0150} ; Sends the Alt code for en dash
+return
+
+; Em dash: Alt + Numpad Plus
+!NumpadAdd::
+Send, {ASC 0151} ; Sends the Alt code for em dash
+return
+```
+
+## How it Works
+
+*   `!NumpadSub::` and `!NumpadAdd::`: These lines define the hotkeys. `!` represents the Alt key, `NumpadSub` is the minus key on the numeric keypad, and `NumpadAdd` is the plus key.
+*   `Send, {ASC 0150}` / `Send, {ASC 0151}`: This command tells AutoHotkey to simulate typing the Alt codes for the en dash (Alt+0150) and em dash (Alt+0151), respectively.
+*   `return`: This indicates the end of the hotkey's action.
+
+With this script running, you can simply press `Alt + Numpad Minus` for an en dash (–) and `Alt + Numpad Plus` for an em dash (—) in any application. It's a small tweak, but it makes typing these useful punctuation marks significantly faster! 
