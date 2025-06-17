@@ -1,0 +1,299 @@
+---
+title: "Fuzzy Dates library – EBNF grammar for temporal expressions"
+date: 2025-06-17
+tags: ['enbf', 'sparql', 'grammar', 'locale', 'datetime']
+thumbnail: '/static/images/blog/thumbs/fuzzy-dates.png'
+draft: false
+summary: Recently I've been working on a project that requires parsing temporal expressions. I've created a library that provides a comprehensive EBNF grammar for representing fuzzy, uncertain, and complex temporal expressions.
+---
+
+Recently I've been working on a project that requires parsing temporal expressions. I've created a library that provides a comprehensive EBNF grammar for representing fuzzy, uncertain, and complex temporal expressions.
+
+That is the project that I've been working on for... years. It was bit a bit, gathering requirements, data, thoughts, that would make the searchable and parsable fuzzy dates grammar. With the advancement of vibe cod... er, AI, I was able to complete the whole grammar in a few days.
+
+# Fuzzy Dates Library
+
+The Fuzzy Dates library provides a comprehensive EBNF (Extended Backus-Naur Form) grammar for representing fuzzy, uncertain, and complex temporal expressions. This standardized approach to expressing dates and times is particularly valuable in scenarios where precision is not absolute or when dealing with historical, archaeological, scientific, etc. temporal data.
+
+## Why Fuzzy Dates?
+
+Let's tackle a few Wikipedia examples (really random articles):
+
+* John of Brienne: c. 1170 – 19–23 March 1237 (uncertain birth year, unknown birth month and day, approximate death date)
+** ''Most 13th-century sources suggest that John died between 19 and 23 March 1237''
+* Pope Gregory IX: 1145 – 22 August 1241 (unknown birth month and day)
+* Pope Innocent II: died 24 September 1143 (unknown birth date)
+* 2025 24 Hours of Le Mans Test Day: 10:00 to 13:00 CEST (UTC+02:00) (time range with timezone)
+
+Traditional date-format (including ISO 8601) is not enough to express these dates, uncertainities, and complex temporal expressions. And thus, the library was born.
+
+## Key Features
+
+The library supports a wide range of temporal expressions:
+
+* Standard Dates — e.g. `1990-05-01`
+* Approximate Dates (`~`) — e.g. `~1990`
+* Partial Dates (`?`) — e.g. `2025-04-?`
+* Time-Only Expressions (`T`) — e.g. `T12:00:00`
+* Time-Only Expressions With High Precision — e.g. `2023-11-20T23:59:59.123456789`
+* Seasons (`Season-YYYY`) — e.g. `Autumn-2023`
+* Periodic Dates (`D`, `W`, `Q`, `H`) — e.g. `D12-2022`
+* Centuries (`C`) - e.g. `19C`
+* Decades (`YYYYs`) - e.g. `1970s`
+* Temporal Qualifiers (`Early-`, `Mid-`, `Late-`) — e.g. `Early-2020`
+* Notes and Annotations — e.g. `1985-12-17T08:45:00+02:00#birth of author`
+* Geo-Temporal Qualifiers — e.g. `2023-06-15@Tokyo`
+* Geo-Temporal Qualifiers With Coordinates — e.g. `2023-06-15T12:00:00@geo:50.061389,19.937222`
+* Historical Style Notes — e.g. `1700-03-20(os)`
+* Calendar Systems — e.g. `1700-03-20(julian)`
+* Ranges and Open-ended Ranges — e.g. `2000..2010`
+* Multiple Choices — e.g. `1980-01-01..1981-12-31|1990-01..1992-06`
+* Choices/Ranges — e.g. `2012-12-[1..3]`
+* Uncertainty Expressions — e.g. `2014(±2y)`
+* Nested Uncertainty — e.g. `~2023(±1y)(±0.5Q)`
+* Ordinal Day-of-Week Expressions — e.g. `1º-Mon-2022`
+* Weighted Date Part Choices — e.g. `2020-[03*20%-04*80%]`
+* Temporal Integer Choices — e.g. `2023-[03..05]`
+* Timezone Handling — e.g. `2024-01-01T00:00:00[America/New_York]`
+* Timezone Shifts — e.g. `2024-01-01T00:00:00[EST→EDT]`
+* Number Separators — e.g. `1_000_000`
+* Probability Distributions — e.g. `2023~normal(μ=2023,σ=2)`
+
+<ArticleImage src={"/static/images/blog/normal_distribution.png"} alt={"Example of normal distribution, μ=2023,σ=2"}/>
+
+## Example Usages
+
+Here are examples of how the Fuzzy Dates grammar can be used:
+
+```ebnf
+(* === Standard Dates === *)
+
+1990                                  (* A specific year *)
+2023-05                               (* A specific year and month *)
+2023-05-15                            (* A specific year, month, and day *)
+-449                                  (* Year 449 BC *)
+
+(* === Partial Dates (Month/Day Only, with optional time) === *)
+
+?-05                                  (* May, unknown year *)
+?-?-13                                (* 13th day of unknown month and year *)
+?-05T10:00:00                         (* May, unknown year, at 10:00:00 *)
+?-?-13T?:30:00                        (* 13th day of unknown month and year, at 30 minutes past any hour *)
+
+(* === Time Only Expressions === *)
+
+T12:00:00                             (* Any day at noon *)
+T?:30:00                              (* Any hour, at 30 minutes, 00 seconds *)
+T?:?:?                                (* Any time, unknown date *)
+T18:00:00                             (* Any day at 6 PM (18:00) *)
+
+(* === Standard Dates with Time === *)
+
+1985-12-17T08:45:00                   (* Specific date and time (no offset) *)
+1985-12-17T08:45:00+02:00             (* Specific date and time with a +02:00 timezone offset *)
+2024-01-01T00:00:00Z                  (* January 1, 2024, at midnight UTC *)
+2023-10-27T15:30:00PST                (* October 27, 2023, 3:30 PM PST *)
+2023-11-20T23:59:59.123               (* Date and time with milliseconds *)
+2023-11-20T23:59:59.123456789         (* Date and time with nanoseconds *)
+2024-03-08T09:00:00IST                (* March 8, 2024, 9:00 AM Indian Standard Time *)
+2024-03-08T09:00:00JST                (* March 8, 2024, 9:00 AM Japan Standard Time *)
+
+(* === Seasons (Season-YYYY) === *)
+
+Autumn-2023                           (* A specific season and year *)
+Summer-2025                           (* Another example of season and year *)
+
+(* === Periodic Dates (Day of Year, Weeks, Quarters, Half-Years) === *)
+
+D12-2022                              (* The 12th day of year 2022 *)
+W12-2022                              (* Week 12 of year 2022 *)
+Q2-2023                               (* Quarter 2 of year 2023 *)
+H2-2023                               (* Half-year 2 of year 2023 *)
+
+(* === Centuries (C) === *)
+
+19C                                   (* Specific 19th Century *)
+-5C                                   (* 5th Century BC *)
+Early-21C                             (* Early part of the 21st Century *)
+
+(* === Decades (YYYYs) === *)
+
+1970s                                 (* The decade of the 1970s *)
+Early-1970s                           (* The early part of the 1970s decade *)
+~2020s                                (* Approximately the 2020s decade *)
+
+(* === Temporal Qualifiers (Early-, Mid-, Late-) === *)
+
+Early-2020                            (* Semantic qualifier: Early part of 2020 *)
+Mid-19C                               (* Semantic qualifier: Middle of the 19th Century *)
+~Late-Autumn-2021                     (* Approximately late Autumn 2021 *)
+
+(* === Wildcards (?) === *)
+
+2021-07-?                             (* Year 2021, July, any day *)
+?-?-?                                 (* Any date (unknown year, month, day) *)
+2023-05-?T?:?:?                       (* May 2023, any day, any time *)
+?-07-?                                (* Unknown year, July, any day *)
+2023-?-15                             (* 2023, unknown month, 15th day *)
+T?:?:?@geo:50.0,20.0                  (* Unknown time, at specific coordinates *)
+
+(* === Notes (#) === *)
+
+1985-12-17T08:45:00+02:00#birth of author (* Specific date and time with timezone and a descriptive note *)
+19C#Industrial Revolution                 (* 19th Century with a descriptive note *)
+~Late-2022#ProjectCompletion              (* Approximately late 2022, with a note "ProjectCompletion" *)
+
+(* === Geo-Temporal Qualifiers (@Location or @geo:lat,lon) === *)
+
+2023-06-15@Tokyo                            (* Date specific to Tokyo timezone (cultural context) *)
+1985-12-17T08:45:00@geo:50.061389,19.937222 (* Date and time at specific coordinates *)
+T12:00:00@geo:34.0522,-118.2437             (* Time at specific coordinates *)
+
+(* === Historical Style Notes (os/ns) & Calendar Systems === *)
+
+1700-03-20(os)                        (* March 20, 1700, Old Style (Julian calendar implied) *)
+1700-03-20(ns)                        (* March 20, 1700, New Style (Gregorian calendar implied) *)
+2023-01-01(iso8601)                   (* January 1, 2023, ISO 8601 calendar *)
+100(stardate)                         (* Year 100, specified with a Stardate calendar from sci-fi *)
+
+(* === Ranges (..) === *)
+
+2000..2010                            (* A year range from 2000 to 2010 *)
+~1944-06-04..~1944-06-06              (* A fuzzy date range, approximately June 4th to June 6th, 1944 *)
+19C..20C                              (* A range of centuries from 19th to 20th *)
+
+(* === Open-ended Ranges (.. at start or end) === *)
+
+2020-01-01..                          (* Open-ended range: From January 1, 2020 onwards *)
+..1990-12-31                          (* Open-ended range: Up to December 31, 1990 *)
+1999s..                               (* From the 1990s decade onwards *)
+
+(* === Uncertain Range Ends and Startings (.. ? or ? ..) === *)
+
+~1944-06-04..?                        (* Start known, end fuzzy *)
+?..1945-05-08                         (* End known, start uncertain *)
+?..                                   (* Both start and end uncertain *)
+
+(* === Multiple Choices (|) === *)
+
+1980-01-01..1981-12-31|1990-01..1992-06 (* Multiple date ranges: from Jan 1, 1980 to Dec 31, 1981 OR from Jan 1990 to June 1992 *)
+19C|20C                                 (* Either the 19th Century OR the 20th Century *)
+2020|2022                               (* Either year 2020 or year 2022 *)
+
+(* === Day & Month Choices/Ranges ([D..D] or [MM-DD|...]) === *)
+
+2012-12-[1..3]                        (* Year 2012, December, between day 1 and day 3 (inclusive) *)
+1948-[04-11|05-12|06-01]              (* Year 1948, on one of three specific dates: April 11th, May 12th, or June 1st *)
+2024-06-[5..7]                        (* June 2024, between the 5th and 7th *)
+
+(* === Approximate Dates (~) === *)
+
+~1990                                 (* Approximate year 1990 *)
+~Autumn-2023                          (* Approximate year 2023, Autumn season *)
+~1944-06-04                           (* Approximately June 4th, 1944 *)
+
+(* === Uncertainty ((±N) or (+N-M)) === *)
+
+2014(±2y)                             (* Year 2014, with a symmetric uncertainty of ±2 years *)
+~2014(+3y-1y)                         (* Approximately year 2014, with an asymmetric uncertainty of +3 years, -1 year *)
+19C(±1C)                              (* 19th Century, with an uncertainty of ±1 century *)
+2023-05-15T10:00:00(±0.5s)            (* May 15, 2023, at 10:00:00, with ±0.5 second uncertainty *)
+
+(* === Ordinal Day-of-Week Expressions (Nº-Day-Period) === *)
+
+1º-Mon-2022                           (* The first Monday of year 2022 *)
+4º-Fri-Autumn-2023                    (* The fourth Friday of Autumn 2023 *)
+[1º..3º]-Mon-H2-2023                  (* From 1st to 3rd Monday of Half-year 2, 2023 *)
+
+(* === Weighted Date Part Choices ([PART*N%-PART*M%]) === *)
+
+2020-[03*20%-04*80%]                  (* Year 2020, with a weighted probability: 20% in March, 80% in April *)
+2023-01-[15*60%-16*40%]               (* January 2023, with weighted probability: 60% on 15th, 40% on 16th *)
+[2023*70%-2024*30%]                   (* Weighted probability for years: 70% 2023, 30% 2024 *)
+T[10*30%-11*70%]                      (* Time: Weighted probability for 10 AM (30%) vs 11 AM (70%) *)
+
+(* === Temporal Integer Choices ([N..M] or [N|M]) === *)
+
+[2020..2025]                          (* A range of years from 2020 to 2025 *)
+2023-[03..05]                         (* Year 2023, months from March to May *)
+2023-01-[10|15|20]                    (* January 2023, on the 10th, 15th, or 20th *)
+T[09..11]:00:00                       (* Time: any hour between 09 and 11, at 00:00 *)
+T10:[30|35]:00                        (* 10 AM, either 30 or 35 minutes, 00 seconds *)
+[19C|20C]                             (* Either the 19th or 20th century (as a choice within a context) *)
+
+(* === Timezone Handling Extensions ([ID] or [Transition]) === *)
+
+2024-01-01T00:00:00[America/New_York] (* Explicit timezone ID *)
+2024-01-01T00:00:00[EST→EDT]          (* Timezone with daylight saving shift *)
+2024-01-01T00:00:00[UTC+2→UTC+3]      (* Timezone offset change *)
+
+(* === Probability Distributions (~distribution(params)) === *)
+
+2023~normal(μ=2023,σ=2)               (* Normally distributed around 2023 with σ=2 years *)
+~2024-06-15~uniform(start=2024-06-01,end=2024-06-30) (* Uniform distribution over June 2024 *)
+19C~triangular(early=1801,peak=1850,late=1900) (* Triangular distribution over 19th century *)
+
+(* === Nested Uncertainty ((Uncertainty1)(Uncertainty2)) === *)
+
+~2023(±1y)(±0.5Q)                     (* Nested uncertainty intervals: ±1 year and ±0.5 quarter *)
+~Early-2020s(±2y)(±1Q)                (* Uncertainty in both year and quarter *)
+1999-12-31(±1d)(±3h)                  (* Date with day and hour uncertainty *)
+
+(* === Number Separators (_) === *)
+
+1_000_000                              (* Year 1M *)
+-1_234_567_890                         (* Year -1234567890 *)
+~-13_787_000_000(±20_000_000)#Big Bang (* Approximate point on a numerical timeline using underscores for readability, with uncertainty *)
+~-4_500_000_000#EarthFormation         (* Earth's formation, demonstrating underscores for large numbers in a note *)
+```
+
+## Getting Started
+
+The repository defines the lexical grammar, that can be used to parse the temporal expressions. The main practical usage is to have a precise and flexible grammar to parse these expressions.
+
+The parser can be integrated with the SPARQL query language, to query the temporal expressions:
+
+Examples:
+
+1. **Custom Functions**
+   - `fuzzy:matches(date, pattern)` - Matches a date against a fuzzy date pattern
+   - `fuzzy:overlaps(date1, date2)` - Checks if two fuzzy dates overlap
+   - `fuzzy:contains(date, subdate)` - Checks if one fuzzy date contains another
+
+2. **Temporal Reasoning**
+   ```sparql
+   # Find events that occurred during a specific period
+   SELECT ?event
+   WHERE {
+     ?event fuzzy:date ?date .
+     FILTER(fuzzy:overlaps(?date, "2020-2025"))
+   }
+   ```
+
+3. **Uncertainty Handling**
+   ```sparql
+   # Find events with specific uncertainty levels
+   SELECT ?event
+   WHERE {
+     ?event fuzzy:date ?date .
+     FILTER(fuzzy:matches(?date, "2020(±1y)"))
+   }
+   ```
+
+4. **Complex Temporal Queries**
+   ```sparql
+   # Find events in a specific season with uncertainty
+   SELECT ?event
+   WHERE {
+     ?event fuzzy:date ?date .
+     FILTER(fuzzy:matches(?date, "Summer-2023(±1m)"))
+   }
+   ```
+
+## What now?
+
+I had a lot of fun working on this project. I've learned a lot about the temporal expressions, the grammar, and the its practical usage. I've built a simple parser and a few tests. I'm leaving the project open as it has a lot of potentials for grammar improvements (see ideas section under the project repository readme).
+
+* Project repository: https://github.com/dariusz-wozniak/fuzzy-dates
+    * .ebnf: [link](https://github.com/dariusz-wozniak/fuzzy-dates/blob/main/grammar/fuzzy-date.ebnf)
+    * syntax diagram: [link](https://github.com/dariusz-wozniak/fuzzy-dates/blob/main/grammar/fuzzy-date.png)
