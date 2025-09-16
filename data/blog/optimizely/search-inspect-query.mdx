@@ -21,18 +21,15 @@ In this article I will focus on the last method.
 
 Basically, you might want to set a breakpoint in the EPiServer.Find.Api class in the place where the request is constructed and is being serialized to JSON. In the current version of the Find client, it is under:
 
-* `SearchCommand<TResult>` →
-  * `Execute` →
-    * `string str = this.CommandContext.Serializer...`
+* `SearchCommand<TResult>` (note the generic class) →
+  * `ExecuteAsync` →
+    * `string requestBody = source.CommandContext.Serializer.Serialize((object) source.Body).`
 
 Usually, I set the non-suspending execution breakpoint in this place and log it to the console, so I can see the query in the debug output.
 
 Below is the example of the query generated using the Foundation project ([source code](https://github.com/dariusz-wozniak/OptimizelyFoundation/blob/main/src/Foundation/Features/Search/SearchService.cs))
 
-Please expand to see more details:
-
-<details>
-<summary>Request</summary>
+Request:
 
 ```json
 {
@@ -592,7 +589,6 @@ Please expand to see more details:
   ]
 }
 ```
-</details>
 
 Request needs to be sent to the Elasticsearch server with POST verb. The URL is constructed basing on your index, i.e.:
 
